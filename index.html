@@ -193,15 +193,16 @@
         }
 
         function renderPowerCard(powerName) {
-            const p = powerData[powerName] || { text: "Keine Regeldetails hinterlegt." };
+            // getPowerData löst auch Varianten wie "Elementarer Angriff (Feuer)" korrekt auf
+            const p = getPowerData(powerName);
             
             let statsLine = "";
             if (p.art) {
                 statsLine = `<div class="power-stats">Art: ${p.art} | Handlung: ${p.action} | Reichweite: ${p.range} | Dauer: ${p.duration}</div>`;
             }
-
+        
             const formattedText = formatTextWithTooltips(p.text);
-
+        
             return `
                 <div class="power-block">
                     <div class="power-header">${powerName}</div>
