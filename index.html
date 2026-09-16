@@ -257,10 +257,11 @@
             allPowers.forEach(powerName => {
                 const pInfo = getPowerData(powerName);
                 if (pInfo && pInfo.getAttack) {
-                    const formattedAttack = formatTextWithTooltips(pInfo.getAttack(ks, powerName));
+                    // attrs wird hier als 3. Parameter übergeben
+                    const formattedAttack = formatTextWithTooltips(pInfo.getAttack(ks, powerName, attrs));
                     attackList.innerHTML += `<li>${formattedAttack}</li>`;
                 }
-            });           
+            });
 
             const powersContainer = document.getElementById('spiritPowersList');
             powersContainer.innerHTML = '';
