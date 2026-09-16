@@ -1,6 +1,7 @@
 const spiritData = {
     feuer: {
         name: "Feuergeist",
+        movement: "5 / 10 / +5",
         attributes: (ks) => ({
             "KON": ks + 1, "GES": ks + 2, "REA": ks + 3, "STR": Math.max(1, ks - 2),
             "WIL": ks, "LOG": ks, "INT": ks + 1, "CHA": ks, "M": ks, "ESS": ks
@@ -21,6 +22,76 @@ const spiritData = {
             `<strong>Elementarer Angriff:</strong> Schaden ${ks}K | Angriffswerte [${ks * 2} / ${(ks * 2) - 2} / ${(ks * 2) - 8} / ${(ks * 2) - 10} / -]`,
             `<strong>Verschlingen:</strong> Schaden ${ks + 2}K + Brennend | Angriffswerte [${(ks * 2) + 1} / - / - / - / -]`
         ]
+    },
+    erd: {
+        name: "Erdgeist",
+        movement: "5 / 10 / +1",
+        attributes: (ks) => ({
+            "KON": ks + 4, "GES": Math.max(1, ks - 2), "REA": Math.max(1, ks - 1), "STR": ks + 4,
+            "WIL": ks, "LOG": Math.max(1, ks - 1), "INT": ks, "CHA": ks, "M": ks, "ESS": ks
+        }),
+        init: (ks) => `${(ks * 2) - 1} + 2W6`,
+        astralInit: (ks) => `${(ks * 2) - 1} + 3W6`,
+        health: (ks) => Math.floor(ks / 2) + 8,
+        defense: (ks) => ({
+            astral: ks,
+            magisch: ks + 4,
+            weltlich: (ks * 2) + 4
+        }),
+        skills: ["Astral", "Exotische Waffen", "Nahkampf", "Wahrnehmung"],
+        powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Bindung", "Materialisieren", "Schutz", "Suche"],
+        weaknesses: ["Allergie (Elektrizität, Schwer)"],
+        optionalPowers: ["Elementarer Angriff (Chemisch)", "Grauen", "Verschleierung", "Verschlingen (Erde)", "Verwirrung"],
+        attacks: (ks) => [
+            `<strong>Elementarer Angriff:</strong> Schaden ${ks}K | Angriffswerte [${ks * 2} / ${(ks * 2) - 2} / ${(ks * 2) - 8} / ${(ks * 2) - 10} / -]`
+        ]
+    },
+    luft: {
+        name: "Luftgeist",
+        movement: "5 / 10 / +5",
+        attributes: (ks) => ({
+            "KON": Math.max(1, ks - 2), "GES": ks + 3, "REA": ks + 4, "STR": Math.max(1, ks - 3),
+            "WIL": ks, "LOG": ks, "INT": ks, "CHA": ks, "M": ks, "ESS": ks
+        }),
+        init: (ks) => `${(ks * 2) + 4} + 2W6`,
+        astralInit: (ks) => `${(ks * 2)} + 3W6`,
+        health: (ks) => Math.floor(ks / 2) + 8,
+        defense: (ks) => ({
+            astral: ks,
+            magisch: Math.max(0, ks - 2),
+            weltlich: Math.max(0, (ks * 2) - 2)
+        }),
+        skills: ["Astral", "Athletik", "Exotische Waffen", "Nahkampf", "Wahrnehmung"],
+        powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Materialisieren", "Suche", "Unfall", "Verschleierung", "Verschlingen (Luft)", "Verwirrung"],
+        weaknesses: ["Allergie (Toxine mit Inhalationsvektor, Schwer)"],
+        optionalPowers: ["Elementarer Angriff (Elektrizität oder Kälte)", "Energieaura (Elektrizität oder Kälte)", "Gifthauch", "Grauen", "Psychokinese", "Schutz"],
+        attacks: (ks) => [
+            `<strong>Elementarer Angriff:</strong> Schaden ${ks}K | Angriffswerte [${ks * 2} / ${(ks * 2) - 2} / ${(ks * 2) - 8} / ${(ks * 2) - 10} / -]`,
+            `<strong>Verschlingen:</strong> Schaden ${ks + 2}B + Erschöpft I | Angriffswerte [${(ks * 2) + 1} / - / - / - / -]`
+        ]
+    },
+    wasser: {
+        name: "Wassergeist",
+        movement: "5 / 10 / +2",
+        attributes: (ks) => ({
+            "KON": ks, "GES": ks + 1, "REA": ks + 2, "STR": ks,
+            "WIL": ks, "LOG": ks, "INT": ks, "CHA": ks, "M": ks, "ESS": ks
+        }),
+        init: (ks) => `${(ks * 2) + 2} + 2W6`,
+        astralInit: (ks) => `${(ks * 2)} + 3W6`,
+        health: (ks) => Math.floor(ks / 2) + 8,
+        defense: (ks) => ({
+            astral: ks,
+            magisch: ks,
+            weltlich: ks * 2
+        }),
+        skills: ["Astral", "Athletik (Schwimmen)", "Exotische Waffen", "Nahkampf", "Wahrnehmung"],
+        powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Materialisieren", "Suche", "Verschleierung", "Verschlingen (Wasser)", "Verwirrung"],
+        weaknesses: ["Allergie (Feuer, Schwer)"],
+        optionalPowers: ["Bindung", "Elementarer Angriff (Kälte)", "Energieaura (Kälte)", "Schutz", "Unfall", "Wetterbeherrschung"],
+        attacks: (ks) => [
+            `<strong>Elementarer Angriff:</strong> Schaden ${ks}K | Angriffswerte [${ks * 2} / ${(ks * 2) - 2} / ${(ks * 2) - 8} / ${(ks * 2) - 10} / -]`,
+            `<strong>Verschlingen:</strong> Schaden ${ks + 2}B + Nass + Erschöpft I | Angriffswerte [${(ks * 2) + 2} / - / - / - / -]`
+        ]
     }
-    // Hier kannst du später Luft, Erde, Wasser etc. einfach unten anhängen
 };
