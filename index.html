@@ -73,7 +73,7 @@
 
     <label for="geistertyp">Geistertyp:</label>
     <select id="geistertyp" onchange="renderOptionalPowers()">
-        <option value="feuer">Feuergeist</option>
+        <!-- Wird automatisch durch JavaScript befüllt -->
     </select>
 
     <label for="kraftstufe">Kraftstufe (KS):</label>
@@ -96,7 +96,7 @@
         <p><strong>Initiative (Astral):</strong> <span id="spiritAstralInit"></span></p>
         <p><strong>Handlungen:</strong> 1 Haupthandlung, 3 Nebenhandlungen</p>
         <p><strong>Zustandsmonitor:</strong> <span id="spiritHealth"></span> Kästchen</p>
-        <p><strong>Bewegung:</strong> 5 / 10 / +5</p>
+        <p><strong>Bewegung:</strong> <span id="spiritMovement"></span></p>
         
         <p><strong>Verteidigungswerte (VW):</strong></p>
         <ul>
@@ -122,6 +122,18 @@
     <script src="spirits.js"></script>
     <script src="powers.js"></script>
     <script>
+        function populateSpiritDropdown() {
+            const select = document.getElementById('geistertyp');
+            select.innerHTML = '';
+        
+            for (const [key, data] of Object.entries(spiritData)) {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = data.name;
+                select.appendChild(option);
+            }
+        }
+        
         function renderOptionalPowers() {
             const ks = parseInt(document.getElementById('kraftstufe').value) || 1;
             const typ = document.getElementById('geistertyp').value;
@@ -209,6 +221,8 @@
             document.getElementById('spiritInit').innerText = data.init(ks);
             document.getElementById('spiritAstralInit').innerText = data.astralInit(ks);
             document.getElementById('spiritHealth').innerText = data.health(ks);
+            // Bewegung dynamisch setzen
+            document.getElementById('spiritMovement').innerText = data.movement;
             
             const def = data.defense(ks);
             document.getElementById('vwAstral').innerText = def.astral;
@@ -238,6 +252,7 @@
         }
 
         // Initiales Rendering
+        populateSpiritDropdown();
         renderOptionalPowers();
     </script>
 </body>
