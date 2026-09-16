@@ -1,2 +1,2 @@
 # sr6_tools
-Some small tools for Shaadowrun 6
+Some small tools for Shadowrun 6
