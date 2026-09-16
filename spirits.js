@@ -156,7 +156,7 @@ const spiritData = {
             weltlich: (ks * 2) + 2
         }),
         skills: ["Astral", "Exotische Waffen", "Hexerei", "Nahkampf", "Wahrnehmung"],
-        powers: ["Astrale Gestalt", "Bewusstsein", "Grauen", "Magischer Schutz", "Materialisierung", "Schutz", "Stille", "Verschleierung", "Verschlingen"],
+        powers: ["Astrale Gestalt", "Bewusstsein", "Grauen", "Magischer Schutz", "Materialisieren", "Schutz", "Stille", "Verschleierung", "Verschlingen"],
         weaknesses: [],
         optionalPowers: ["Bewegung", "Gifthauch", "Suche", "Unfall", "Verwirrung"],
         attacks: (ks) => [
@@ -179,7 +179,7 @@ const spiritData = {
             weltlich: (ks * 2) + 1
         }),
         skills: ["Astral", "Exotische Waffen", "Nahkampf", "Wahrnehmung"],
-        powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Grauen", "Magischer Schutz", "Materialisierung", "Schutz"],
+        powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Grauen", "Magischer Schutz", "Materialisieren", "Schutz"],
         weaknesses: [],
         optionalPowers: ["Elementarer Angriff (Element nach Wahl)", "Fertigkeitsspezialisierung (Nahkampf)", "Natürliche Waffe", "Psychokinese", "Tierbeherrschung", "Verschleierung"],
         attacks: (ks) => [
@@ -202,7 +202,7 @@ const spiritData = {
             weltlich: ks * 2
         }),
         skills: ["Astral", "Nahkampf", "Wahrnehmung"],
-        powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Bindung", "Fertigkeit (Biotech, Elektronik, Mechanik, Natur oder Steuern + Spezi & Wissen)", "Materialisierung", "Suche", "Unfall"],
+        powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Bindung", "Fertigkeit (Biotech, Elektronik, Mechanik, Natur oder Steuern + Spezi & Wissen)", "Materialisieren", "Suche", "Unfall"],
         weaknesses: [],
         optionalPowers: ["Einfluss", "Fertigkeit (Zusatzwahl s. o.)", "Gesteigerte Sinne (Gehör, Geruchssinn, Infrarotsicht oder Restlichtverstärkung)", "Psychokinese", "Verschleierung"],
         attacks: (ks) => []
@@ -223,7 +223,7 @@ const spiritData = {
             weltlich: (ks * 2) + 3
         }),
         skills: ["Astral", "Hexerei", "Nahkampf", "Wahrnehmung"],
-        powers: ["Astrale Gestalt", "Bewusstsein", "Magischer Schutz", "Materialisierung", "Schatten", "Schutz", "Suche", "Verwirrung", "Weissagung"],
+        powers: ["Astrale Gestalt", "Bewusstsein", "Magischer Schutz", "Materialisieren", "Schatten", "Schutz", "Suche", "Verwirrung", "Weissagung"],
         weaknesses: [],
         optionalPowers: ["Einfluss", "Gesteigerte Sinne (Gehör, Geruchssinn, Infrarotsicht oder Restlichtverstärkung)", "Grauen", "Verschlingen"],
         attacks: (ks) => []
@@ -244,7 +244,7 @@ const spiritData = {
             weltlich: (ks * 2) + 1
         }),
         skills: ["Astral", "Athletik", "Exotische Waffen", "Nahkampf", "Wahrnehmung"],
-        powers: ["Astrale Gestalt", "Bewusstsein", "Elementarer Angriff (Strahlung)", "Energieaura (Strahlung)", "Hexerei", "Materialisierung", "Unfall", "Verschlingen (Strahlung)", "Verwirrung"],
+        powers: ["Astrale Gestalt", "Bewusstsein", "Elementarer Angriff (Strahlung)", "Energieaura (Strahlung)", "Hexerei", "Materialisieren", "Unfall", "Verschlingen (Strahlung)", "Verwirrung"],
         weaknesses: ["Allergie (Blei/Jod, Schwer)", "Verwundbarkeit (Feuerlöscher)"],
         optionalPowers: ["Gifthauch", "Grauen", "Natürlicher Zauberspruch (Strahlenblitz, Strahlenexplosion)", "Schutz", "Suche"],
         attacks: (ks) => [
