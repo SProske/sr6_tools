@@ -38,12 +38,10 @@ const powerData = {
         text: "Ein Critter mit dieser Kraft kann einen tödlichen Strahl elementarer Energie projizieren, der aus einem Flammenstoß, einem Eisspeer, einem Lichtblitz, einem glibbrigen Klumpen ätzender Substanz oder Ähnlichem bestehen kann. Die Kraft entspricht immer einem bestimmten Element: Elektrizität, Feuer, Chemie, Kälte oder Strahlung.<br>Der Critter legt eine Fernkampfangriffsprobe auf <em>Geschicklichkeit + Magie</em> ab. Der Angriff hat einen Schadenswert von (Magie)K (Schadensart), die Angriffswerte sind Magie × 2 / (Magie × 2) – 2 / (Magie × 2) – 8 / (Magie × 2) – 10 / –. Fällt der Angriffswert auf 0 oder weniger, kann der Elementare Angriff diese Reichweite nicht erreichen. Das Opfer gelangt in den Status, der der Angriffs- und damit Schadensart entspricht: {Gebrutzelt} (Elektrizität), {Brennend} (Feuer), {Verätzt} (Chemisch), {Unterkühlt} (Kälte) oder {Verstrahlt} (Strahlung).",
         
         // Dynamische Angriffsgenerierung
-        getAttack: (ks, powerName) => {
-            // Extrahiert das Element aus der Klammer, z.B. "Feuer" aus "Elementarer Angriff (Feuer)"
+        getAttack: (ks, powerName, attrs) => {
             const elementMatch = powerName.match(/\(([^)]+)\)/);
             const element = elementMatch ? elementMatch[1] : "Elementar";
 
-            // Statuszuordnung
             let statusText = "";
             if (element.includes("Feuer")) statusText = " + {Brennend}";
             else if (element.includes("Elektrizität")) statusText = " + {Gebrutzelt}";
@@ -51,12 +49,16 @@ const powerData = {
             else if (element.includes("Kälte")) statusText = " + {Unterkühlt}";
             else if (element.includes("Strahlung")) statusText = " + {Verstrahlt}";
 
-            const aw1 = ks * 2;
-            const aw2 = (ks * 2) - 2;
-            const aw3 = (ks * 2) - 8;
-            const aw4 = (ks * 2) - 10;
+            // Würfelpool berechnen (Geschicklichkeit + Magie)
+            const ges = attrs && attrs["GES"] ? attrs["GES"] : ks;
+            const mag = attrs && attrs["M"] ? attrs["M"] : ks;
+            const pool = ges + mag;
 
-            return `<strong>Elementarer Angriff (${element}):</strong> Schaden ${ks}K (${element})${statusText} | Probe: Geschicklichkeit + Magie | AW [${aw1} / ${aw2} / ${aw3} / ${aw4} / -]`;
+            // Angriffswerte berechnen & 0 oder weniger zu "-" umwandeln
+            const rawAWs = [ks * 2, (ks * 2) - 2, (ks * 2) - 8, (ks * 2) - 10, 0];
+            const formattedAWs = rawAWs.map((val, index) => (index < 4 && val > 0) ? val : "-").join(" / ");
+
+            return `<strong>Elementarer Angriff (${element}):</strong> Schaden ${ks}K (${element})${statusText} | Probe: ${pool} (Geschicklichkeit + Magie) | AW ${formattedAWs}`;
         }
     }
 };
