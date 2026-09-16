@@ -17,8 +17,7 @@ const spiritData = {
         skills: ["Astral", "Athletik", "Exotische Waffen", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewusstsein", "Elementarer Angriff (Feuer)", "Energieaura (Feuer)", "Materialisieren", "Unfall", "Verschlingen (Feuer)", "Verwirrung"],
         weaknesses: ["Allergie (Kälte, Schwer)", "Verwundbarkeit (Feuerlöscher)"],
-        optionalPowers: ["Gifthauch", "Grauen", "Schutz", "Suche"],
-        attacks: (ks) => []
+        optionalPowers: ["Gifthauch", "Grauen", "Schutz", "Suche"]
     },
     erd: {
         name: "Erdgeist",
@@ -38,8 +37,7 @@ const spiritData = {
         skills: ["Astral", "Exotische Waffen", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Bindung", "Materialisieren", "Schutz", "Suche"],
         weaknesses: ["Allergie (Elektrizität, Schwer)"],
-        optionalPowers: ["Elementarer Angriff (Chemisch)", "Grauen", "Verschleierung", "Verschlingen (Erde)", "Verwirrung"],
-        attacks: (ks) => []
+        optionalPowers: ["Elementarer Angriff (Chemisch)", "Grauen", "Verschleierung", "Verschlingen (Erde)", "Verwirrung"]
     },
     luft: {
         name: "Luftgeist",
@@ -59,8 +57,7 @@ const spiritData = {
         skills: ["Astral", "Athletik", "Exotische Waffen", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Materialisieren", "Suche", "Unfall", "Verschleierung", "Verschlingen (Luft)", "Verwirrung"],
         weaknesses: ["Allergie (Toxine mit Inhalationsvektor, Schwer)"],
-        optionalPowers: ["Elementarer Angriff (Elektrizität oder Kälte)", "Energieaura (Elektrizität oder Kälte)", "Gifthauch", "Grauen", "Psychokinese", "Schutz"],
-        attacks: (ks) => []
+        optionalPowers: ["Elementarer Angriff (Elektrizität oder Kälte)", "Energieaura (Elektrizität oder Kälte)", "Gifthauch", "Grauen", "Psychokinese", "Schutz"]
     },
     wasser: {
         name: "Wassergeist",
@@ -80,8 +77,7 @@ const spiritData = {
         skills: ["Astral", "Athletik (Schwimmen)", "Exotische Waffen", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Materialisieren", "Suche", "Verschleierung", "Verschlingen (Wasser)", "Verwirrung"],
         weaknesses: ["Allergie (Feuer, Schwer)"],
-        optionalPowers: ["Bindung", "Elementarer Angriff (Kälte)", "Energieaura (Kälte)", "Schutz", "Unfall", "Wetterbeherrschung"],
-        attacks: (ks) => []
+        optionalPowers: ["Bindung", "Elementarer Angriff (Kälte)", "Energieaura (Kälte)", "Schutz", "Unfall", "Wetterbeherrschung"]
     },
     mensch: {
         name: "Geist des Menschen",
@@ -101,10 +97,7 @@ const spiritData = {
         skills: ["Astral", "Hexerei", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewusstsein", "Einfluss", "Gesteigerte Sinne (Infrarotsicht, Restlichtverstärkung)", "Materialisieren", "Schutz", "Suche", "Unfall", "Verschleierung", "Verwirrung"],
         weaknesses: ["Allergie (Eisenmetalle, Schwer)"],
-        optionalPowers: ["Bewegung", "Grauen", "Natürlicher Zauberspruch", "Psychokinese"],
-        attacks: (ks) => [
-            `<strong>Fäuste:</strong> Schaden ${Math.max(0, Math.floor(ks / 2) - 1)}B | Angriffswerte [${ks * 2} / - / - / - / -]`
-        ]
+        optionalPowers: ["Bewegung", "Grauen", "Natürlicher Zauberspruch", "Psychokinese"]
     },
     tier: {
         name: "Geist des Tieres",
@@ -124,10 +117,7 @@ const spiritData = {
         skills: ["Astral", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Gesteigerte Sinne (Gehör, Geruch, Restlichtverstärkung)", "Grauen", "Materialisieren", "Tierbeherrschung"],
         weaknesses: ["Allergie (Silber, Schwer)"],
-        optionalPowers: ["Gift", "Gifthauch", "Natürliche Waffe (Kralle/Biss)", "Schutz", "Suche", "Verschleierung", "Verwirrung"],
-        attacks: (ks) => [
-            `<strong>Kralle/Biss:</strong> Schaden ${Math.floor(ks / 2) + 1}K | Angriffswerte [${(ks * 2) + 2} / - / - / - / -]`
-        ]
+        optionalPowers: ["Gift", "Gifthauch", "Natürliche Waffe (Kralle/Biss)", "Schutz", "Suche", "Verschleierung", "Verwirrung"]
     },
     pflanze: {
         name: "Pflanzengeist",
@@ -147,8 +137,7 @@ const spiritData = {
         skills: ["Astral", "Exotische Waffen", "Hexerei", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewusstsein", "Grauen", "Magischer Schutz", "Materialisieren", "Schutz", "Stille", "Verschleierung", "Verschlingen"],
         weaknesses: [],
-        optionalPowers: ["Bewegung", "Gifthauch", "Suche", "Unfall", "Verwirrung"],
-        attacks: (ks) => []
+        optionalPowers: ["Bewegung", "Gifthauch", "Suche", "Unfall", "Verwirrung"]
     },
     beschuetzer: {
         name: "Beschützergeist",
@@ -168,10 +157,7 @@ const spiritData = {
         skills: ["Astral", "Exotische Waffen", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Grauen", "Magischer Schutz", "Materialisieren", "Schutz"],
         weaknesses: [],
-        optionalPowers: ["Elementarer Angriff (Element nach Wahl)", "Fertigkeitsspezialisierung (Nahkampf)", "Natürliche Waffe", "Psychokinese", "Tierbeherrschung", "Verschleierung"],
-        attacks: (ks) => [
-            `<strong>Natürliche Waffe:</strong> Schaden ${Math.floor(ks / 2) + 1}K | Angriffswerte [${(ks * 2) + 5} / - / - / - / -]`
-        ]
+        optionalPowers: ["Elementarer Angriff (Element nach Wahl)", "Fertigkeitsspezialisierung (Nahkampf)", "Natürliche Waffe", "Psychokinese", "Tierbeherrschung", "Verschleierung"]
     },
     helfer: {
         name: "Helfergeist",
@@ -191,8 +177,7 @@ const spiritData = {
         skills: ["Astral", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Bindung", "Fertigkeit (Biotech, Elektronik, Mechanik, Natur oder Steuern + Spezi & Wissen)", "Materialisieren", "Suche", "Unfall"],
         weaknesses: [],
-        optionalPowers: ["Einfluss", "Fertigkeit (Zusatzwahl s. o.)", "Gesteigerte Sinne (Gehör, Geruchssinn, Infrarotsicht oder Restlichtverstärkung)", "Psychokinese", "Verschleierung"],
-        attacks: (ks) => []
+        optionalPowers: ["Einfluss", "Fertigkeit (Zusatzwahl s. o.)", "Gesteigerte Sinne (Gehör, Geruchssinn, Infrarotsicht oder Restlichtverstärkung)", "Psychokinese", "Verschleierung"]
     },
     ratgeber: {
         name: "Ratgebergeist",
@@ -212,8 +197,7 @@ const spiritData = {
         skills: ["Astral", "Hexerei", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewusstsein", "Magischer Schutz", "Materialisieren", "Schatten", "Schutz", "Suche", "Verwirrung", "Weissagung"],
         weaknesses: [],
-        optionalPowers: ["Einfluss", "Gesteigerte Sinne (Gehör, Geruchssinn, Infrarotsicht oder Restlichtverstärkung)", "Grauen", "Verschlingen"],
-        attacks: (ks) => []
+        optionalPowers: ["Einfluss", "Gesteigerte Sinne (Gehör, Geruchssinn, Infrarotsicht oder Restlichtverstärkung)", "Grauen", "Verschlingen"]
     },
     nuklear: {
         name: "Nukleargeist",
@@ -233,7 +217,6 @@ const spiritData = {
         skills: ["Astral", "Athletik", "Exotische Waffen", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewusstsein", "Elementarer Angriff (Strahlung)", "Energieaura (Strahlung)", "Hexerei", "Materialisieren", "Unfall", "Verschlingen (Strahlung)", "Verwirrung"],
         weaknesses: ["Allergie (Blei/Jod, Schwer)", "Verwundbarkeit (Feuerlöscher)"],
-        optionalPowers: ["Gifthauch", "Grauen", "Natürlicher Zauberspruch (Strahlenblitz, Strahlenexplosion)", "Schutz", "Suche"],
-        attacks: (ks) => []
+        optionalPowers: ["Gifthauch", "Grauen", "Natürlicher Zauberspruch (Strahlenblitz, Strahlenexplosion)", "Schutz", "Suche"]
     }
 };
