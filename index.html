@@ -122,6 +122,14 @@
     <script src="spirits.js"></script>
     <script src="powers.js"></script>
     <script>
+        function getPowerData(powerName) {
+            if (powerData[powerName]) return powerData[powerName];
+            // Falls Name Klammern enthält (z.B. "Elementarer Angriff (Feuer)"), nach Basisnamen suchen
+            const baseName = powerName.split('(')[0].trim();
+            if (powerData[baseName]) return powerData[baseName];
+            return { shortDesc: "Keine Kurzbeschreibung verfügbar.", text: "Keine Regeldetails hinterlegt." };
+        }
+        
         function populateSpiritDropdown() {
             const select = document.getElementById('geistertyp');
             select.innerHTML = '';
@@ -132,14 +140,6 @@
                 option.textContent = data.name;
                 select.appendChild(option);
             }
-        }
-
-        function getPowerData(powerName) {
-            if (powerData[powerName]) return powerData[powerName];
-            // Falls Name Klammern enthält (z.B. "Elementarer Angriff (Feuer)"), nach Basisnamen suchen
-            const baseName = powerName.split('(')[0].trim();
-            if (powerData[baseName]) return powerData[baseName];
-            return { shortDesc: "Keine Kurzbeschreibung verfügbar.", text: "Keine Regeldetails hinterlegt." };
         }
 
         function generateMeleeAttack(ks, typ, attrs, allPowers) {
@@ -192,7 +192,7 @@
             
             return `<li>${formattedText}</li>`;
         }
-        
+
         function renderOptionalPowers() {
             const ks = parseInt(document.getElementById('kraftstufe').value) || 1;
             const typ = document.getElementById('geistertyp').value;
@@ -200,17 +200,18 @@
             
             const maxAllowed = Math.floor(ks / 3);
             document.getElementById('maxOptionalCount').innerText = maxAllowed;
-
+        
             const listContainer = document.getElementById('optionalPowersList');
             listContainer.innerHTML = '';
-
+        
             if (maxAllowed === 0) {
                 listContainer.innerHTML = '<em>Keine Zusatzkräfte bei dieser Kraftstufe möglich.</em>';
                 return;
             }
-
+        
             data.optionalPowers.forEach(powerName => {
-                const info = powerData[powerName] || { shortDesc: "Keine Kurzbeschreibung verfügbar." };
+                // getPowerData löst auch Varianten mit Klammern wie "(Chemisch)" sauber auf
+                const info = getPowerData(powerName);
                 listContainer.innerHTML += `
                     <div class="checkbox-item">
                         <input type="checkbox" class="opt-power-cb" value="${powerName}" onchange="limitCheckboxes(${maxAllowed})">
