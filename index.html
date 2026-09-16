@@ -3,103 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SR6 Geister-Generator (Prototyp)</title>
+    <title>SR6 Geister-Generator</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; line-height: 1.6; }
-        .card { border: 1px solid #ccc; padding: 15px; border-radius: 8px; background-color: #f9f9f9; margin-top: 20px; }
-        .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; }
-        .stat-box { background: #fff; border: 1px solid #ddd; padding: 5px; text-align: center; border-radius: 4px; }
-        label { font-weight: bold; }
-        input, select, button { padding: 8px; margin-top: 5px; margin-bottom: 15px; width: 100%; box-sizing: border-box; }
-        button { background-color: #b22222; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 4px; }
-        button:hover { background-color: #8b0000; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 700px; margin: 20px auto; padding: 20px; background-color: #1a1a1a; color: #eee; }
+        .card { border: 1px solid #444; padding: 20px; border-radius: 8px; background-color: #2a2a2a; margin-top: 20px; }
+        .stat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 10px 0; }
+        .stat-box { background: #333; border: 1px solid #555; padding: 8px; text-align: center; border-radius: 4px; }
+        .stat-box span { font-size: 0.8em; color: #aaa; display: block; }
+        label { font-weight: bold; display: block; margin-top: 10px; }
+        input, select, button { padding: 8px; margin-top: 5px; width: 100%; box-sizing: border-box; background-color: #333; color: #fff; border: 1px solid #555; border-radius: 4px; }
+        button { background-color: #b22222; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        button:hover { background-color: #d32f2f; }
+        .checkbox-group { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; margin-top: 5px; background: #333; padding: 10px; border-radius: 4px; }
+        .checkbox-group label { font-weight: normal; margin-top: 0; cursor: pointer; }
+        .section-title { border-bottom: 1px solid #555; padding-bottom: 4px; margin-top: 15px; color: #e57373; }
+        ul { padding-left: 20px; margin: 5px 0; }
     </style>
 </head>
 <body>
 
-    <h1>Shadowrun 6 – Geister-Generator</h1>
-
-    <label for="kraftstufe">Kraftstufe (K):</label>
-    <input type="number" id="kraftstufe" min="1" max="12" value="4">
+    <h1>SR6 Geister-Generator</h1>
 
     <label for="geistertyp">Geistertyp:</label>
-    <select id="geistertyp">
+    <select id="geistertyp" onchange="renderOptionalPowers()">
         <option value="feuer">Feuergeist</option>
-        <option value="luft">Luftgeist</option>
     </select>
+
+    <label for="kraftstufe">Kraftstufe (KS):</label>
+    <input type="number" id="kraftstufe" min="1" max="12" value="4" oninput="renderOptionalPowers()">
+
+    <div id="optionalPowersContainer">
+        <label>Zusätzliche Kräfte (Auswählbar: <span id="maxOptionalCount">0</span>):</label>
+        <div id="optionalPowersList" class="checkbox-group"></div>
+    </div>
 
     <button onclick="generateSpirit()">Geist generieren</button>
 
     <div id="output" class="card" style="display: none;">
-        <h2 id="spiritName">Geist</h2>
-        <p><strong>Kraftstufe:</strong> <span id="spiritLevel"></span></p>
-
-        <h3>Attribute</h3>
+        <h2 id="spiritName" style="color: #ff5252; margin-top: 0;"></h2>
+        
         <div class="stat-grid" id="attributeGrid"></div>
 
-        <h3>Kampf- & Poolwerte</h3>
-        <p><strong>Initiative:</strong> <span id="spiritInit"></span></p>
-        <p><strong>Verteidigungspool:</strong> <span id="spiritDef"></span></p>
+        <h3 class="section-title">Kampf- &amp; Statuswerte</h3>
+        <p><strong>Initiative (Physisch):</strong> <span id="spiritInit"></span></p>
+        <p><strong>Initiative (Astral):</strong> <span id="spiritAstralInit"></span></p>
+        <p><strong>Handlungen:</strong> 1 Haupthandlung, 3 Nebenhandlungen</p>
+        <p><strong>Zustandsmonitor:</strong> <span id="spiritHealth"></span> Kästchen</p>
+        <p><strong>Bewegung:</strong> 5 / 10 / +5</p>
+        
+        <p><strong>Verteidigungswerte (VW):</strong></p>
+        <ul>
+            <li><strong>Astral:</strong> <span id="vwAstral"></span></li>
+            <li><strong>Physisch (gg. Magie):</strong> <span id="vwMagisch"></span></li>
+            <li><strong>Physisch (gg. Weltlich):</strong> <span id="vwWeltlich"></span></li>
+        </ul>
+
+        <h3 class="section-title">Fertigkeiten (Wert = KS)</h3>
+        <p id="spiritSkills"></p>
+
+        <h3 class="section-title">Angriffe</h3>
+        <ul id="spiritAttacks"></ul>
+
+        <h3 class="section-title">Kräfte &amp; Schwächen</h3>
+        <p><strong>Basis-Kräfte:</strong> <span id="spiritPowers"></span></p>
+        <p><strong>Gewählte Zusatzkräfte:</strong> <span id="spiritExtraPowers"></span></p>
+        <p><strong>Schwächen:</strong> <span id="spiritWeaknesses"></span></p>
     </div>
 
     <script>
-        function generateSpirit() {
-            const k = parseInt(document.getElementById('kraftstufe').value);
+        // Datenbank der Geisterdaten & Formeln
+        const spiritData = {
+            feuer: {
+                name: "Feuergeist",
+                attributes: (ks) => ({
+                    "KON": ks + 1, "GES": ks + 2, "REA": ks + 3, "STR": Math.max(1, ks - 2),
+                    "WIL": ks, "LOG": ks, "INT": ks + 1, "CHA": ks, "M": ks, "ESS": ks
+                }),
+                init: (ks) => `${(ks * 2) + 4} + 2W6`,
+                astralInit: (ks) => `${(ks * 2) + 1} + 3W6`,
+                health: (ks) => Math.floor(ks / 2) + 8,
+                defense: (ks) => ({
+                    astral: ks + 1,
+                    magisch: ks + 1,
+                    weltlich: (ks * 2) + 1
+                }),
+                skills: ["Astral", "Athletik", "Exotische Waffen", "Nahkampf", "Wahrnehmung"],
+                powers: ["Astrale Gestalt", "Bewusstsein", "Elementarer Angriff (Feuer)", "Energieaura (Feuer)", "Materialisieren", "Unfall", "Verschlingen (Feuer)", "Verwirrung"],
+                weaknesses: ["Allergie (Kälte, Schwer)", "Verwundbarkeit (Feuerlöscher)"],
+                optionalPowers: ["Gifthauch", "Grauen", "Schutz", "Suche"],
+                attacks: (ks) => [
+                    `<strong>Elementarer Angriff:</strong> Schaden ${ks}K | Angriffswerte [${ks * 2} / ${(ks * 2) - 2} / ${(ks * 2) - 8} / ${(ks * 2) - 10} / -]`,
+                    `<strong>Verschlingen:</strong> Schaden ${ks + 2}K + Brennend | Angriffswerte [${(ks * 2) + 1} / - / - / - / -]`
+                ]
+            }
+        };
+
+        function renderOptionalPowers() {
+            const ks = parseInt(document.getElementById('kraftstufe').value) || 1;
             const typ = document.getElementById('geistertyp').value;
+            const data = spiritData[typ];
+            
+            const maxAllowed = Math.floor(ks / 3);
+            document.getElementById('maxOptionalCount').innerText = maxAllowed;
 
-            if (isNaN(k) || k < 1) return;
+            const listContainer = document.getElementById('optionalPowersList');
+            listContainer.innerHTML = '';
 
-            let stats = {};
-            let initText = "";
-            let defPool = 0;
-            let name = "";
-
-            if (typ === 'feuer') {
-                name = `Feuergeist (Stufe ${k})`;
-                // Formelbeispiel für Feuergeist
-                stats = {
-                    "KON": k + 2,
-                    "GES": k + 3,
-                    "REA": k + 3,
-                    "STR": k,
-                    "CHA": k,
-                    "INT": k,
-                    "LOG": k,
-                    "WIL": k
-                };
-                initText = `${(k + 3) * 2} + 2W6`;
-                defPool = (k + 3) + k; // REA + INT (Beispiel)
-            } else if (typ === 'luft') {
-                name = `Luftgeist (Stufe ${k})`;
-                stats = {
-                    "KON": k,
-                    "GES": k + 4,
-                    "REA": k + 4,
-                    "STR": k - 1 < 1 ? 1 : k - 1,
-                    "CHA": k,
-                    "INT": k,
-                    "LOG": k,
-                    "WIL": k
-                };
-                initText = `${(k + 4) * 2} + 3W6`;
-                defPool = (k + 4) + k;
+            if (maxAllowed === 0) {
+                listContainer.innerHTML = '<em>Keine Zusatzkräfte bei dieser Kraftstufe möglich.</em>';
+                return;
             }
 
-            // UI aktualisieren
-            document.getElementById('spiritName').innerText = name;
-            document.getElementById('spiritLevel').innerText = k;
+            data.optionalPowers.forEach((power, index) => {
+                listContainer.innerHTML += `
+                    <label>
+                        <input type="checkbox" class="opt-power-cb" value="${power}" onchange="limitCheckboxes(${maxAllowed})">
+                        ${power}
+                    </label>
+                `;
+            });
+        }
 
+        function limitCheckboxes(max) {
+            const checkboxes = document.querySelectorAll('.opt-power-cb');
+            const checkedCount = document.querySelectorAll('.opt-power-cb:checked').length;
+
+            checkboxes.forEach(cb => {
+                if (!cb.checked) {
+                    cb.disabled = checkedCount >= max;
+                }
+            });
+        }
+
+        function generateSpirit() {
+            const ks = parseInt(document.getElementById('kraftstufe').value) || 1;
+            const typ = document.getElementById('geistertyp').value;
+            const data = spiritData[typ];
+
+            // Basisdaten
+            document.getElementById('spiritName').innerText = `${data.name} (Kraftstufe ${ks})`;
+            
+            // Attribute
+            const attrs = data.attributes(ks);
             const grid = document.getElementById('attributeGrid');
             grid.innerHTML = '';
-            for (const [key, val] of Object.entries(stats)) {
-                grid.innerHTML += `<div class="stat-box"><strong>${key}</strong><br>${val}</div>`;
+            for (const [key, val] of Object.entries(attrs)) {
+                grid.innerHTML += `<div class="stat-box"><span>${key}</span><strong>${val}</strong></div>`;
             }
 
-            document.getElementById('spiritInit').innerText = initText;
-            document.getElementById('spiritDef').innerText = defPool;
+            // Kampfwerte
+            document.getElementById('spiritInit').innerText = data.init(ks);
+            document.getElementById('spiritAstralInit').innerText = data.astralInit(ks);
+            document.getElementById('spiritHealth').innerText = data.health(ks);
+            
+            const def = data.defense(ks);
+            document.getElementById('vwAstral').innerText = def.astral;
+            document.getElementById('vwMagisch').innerText = def.magisch;
+            document.getElementById('vwWeltlich').innerText = def.weltlich;
+
+            // Fertigkeiten
+            document.getElementById('spiritSkills').innerText = data.skills.map(s => `${s} ${ks}`).join(', ');
+
+            // Angriffe
+            const attackList = document.getElementById('spiritAttacks');
+            attackList.innerHTML = '';
+            data.attacks(ks).forEach(atk => {
+                attackList.innerHTML += `<li>${atk}</li>`;
+            });
+
+            // Kräfte & Schwächen
+            document.getElementById('spiritPowers').innerText = data.powers.join(', ');
+            document.getElementById('spiritWeaknesses').innerText = data.weaknesses.join(', ');
+
+            // Gewählte Zusatzkräfte auslesen
+            const selectedExtras = Array.from(document.querySelectorAll('.opt-power-cb:checked')).map(cb => cb.value);
+            document.getElementById('spiritExtraPowers').innerText = selectedExtras.length > 0 ? selectedExtras.join(', ') : 'Keine ausgewählt';
 
             document.getElementById('output').style.display = 'block';
         }
+
+        // Initiales Rendering beim Laden der Seite
+        renderOptionalPowers();
     </script>
 </body>
 </html>
