@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SR6 Geister-Generator</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 700px; margin: 20px auto; padding: 20px; background-color: #1a1a1a; color: #eee; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 750px; margin: 20px auto; padding: 20px; background-color: #1a1a1a; color: #eee; }
         .card { border: 1px solid #444; padding: 20px; border-radius: 8px; background-color: #2a2a2a; margin-top: 20px; }
         .stat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 10px 0; }
         .stat-box { background: #333; border: 1px solid #555; padding: 8px; text-align: center; border-radius: 4px; }
@@ -14,10 +14,57 @@
         input, select, button { padding: 8px; margin-top: 5px; width: 100%; box-sizing: border-box; background-color: #333; color: #fff; border: 1px solid #555; border-radius: 4px; }
         button { background-color: #b22222; font-weight: bold; cursor: pointer; margin-top: 15px; }
         button:hover { background-color: #d32f2f; }
-        .checkbox-group { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; margin-top: 5px; background: #333; padding: 10px; border-radius: 4px; }
-        .checkbox-group label { font-weight: normal; margin-top: 0; cursor: pointer; }
-        .section-title { border-bottom: 1px solid #555; padding-bottom: 4px; margin-top: 15px; color: #e57373; }
+        
+        .checkbox-group { display: flex; flex-direction: column; gap: 8px; margin-top: 5px; background: #333; padding: 10px; border-radius: 4px; }
+        .checkbox-item { display: flex; align-items: flex-start; gap: 8px; }
+        .checkbox-item input { width: auto; margin-top: 3px; }
+        .opt-desc { font-size: 0.85em; color: #aaa; display: block; }
+
+        .section-title { border-bottom: 1px solid #555; padding-bottom: 4px; margin-top: 20px; color: #e57373; }
         ul { padding-left: 20px; margin: 5px 0; }
+
+        /* Power Display Cards in Sheet */
+        .power-block { background: #222; border: 1px solid #444; border-left: 4px solid #e57373; padding: 10px; margin-bottom: 10px; border-radius: 4px; }
+        .power-header { font-weight: bold; color: #ff8a80; margin-bottom: 4px; }
+        .power-stats { font-size: 0.8em; color: #bbb; background: #333; padding: 2px 6px; border-radius: 3px; display: inline-block; margin-bottom: 6px; }
+        .power-text { font-size: 0.9em; line-height: 1.4; color: #ddd; }
+
+        /* Status Tooltip Styling */
+        .status-tooltip {
+            color: #ff8a80;
+            border-bottom: 1px dashed #ff8a80;
+            cursor: help;
+            position: relative;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        .status-tooltip .tooltip-text {
+            visibility: hidden;
+            width: 220px;
+            background-color: #111;
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+            font-size: 0.8em;
+            font-weight: normal;
+            border: 1px solid #e57373;
+            pointer-events: none;
+        }
+
+        .status-tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -64,14 +111,16 @@
         <h3 class="section-title">Angriffe</h3>
         <ul id="spiritAttacks"></ul>
 
-        <h3 class="section-title">Kräfte &amp; Schwächen</h3>
-        <p><strong>Basis-Kräfte:</strong> <span id="spiritPowers"></span></p>
-        <p><strong>Gewählte Zusatzkräfte:</strong> <span id="spiritExtraPowers"></span></p>
-        <p><strong>Schwächen:</strong> <span id="spiritWeaknesses"></span></p>
+        <h3 class="section-title">Kräfte</h3>
+        <div id="spiritPowersList"></div>
+
+        <h3 class="section-title">Schwächen</h3>
+        <p id="spiritWeaknesses"></p>
     </div>
 
+    <!-- Skripte in korrekter Reihenfolge laden -->
     <script src="spirits.js"></script>
-
+    <script src="powers.js"></script>
     <script>
         function renderOptionalPowers() {
             const ks = parseInt(document.getElementById('kraftstufe').value) || 1;
@@ -89,12 +138,16 @@
                 return;
             }
 
-            data.optionalPowers.forEach((power, index) => {
+            data.optionalPowers.forEach(powerName => {
+                const info = powerData[powerName] || { shortDesc: "Keine Kurzbeschreibung verfügbar." };
                 listContainer.innerHTML += `
-                    <label>
-                        <input type="checkbox" class="opt-power-cb" value="${power}" onchange="limitCheckboxes(${maxAllowed})">
-                        ${power}
-                    </label>
+                    <div class="checkbox-item">
+                        <input type="checkbox" class="opt-power-cb" value="${powerName}" onchange="limitCheckboxes(${maxAllowed})">
+                        <div>
+                            <strong>${powerName}</strong>
+                            <span class="opt-desc">${info.shortDesc}</span>
+                        </div>
+                    </div>
                 `;
             });
         }
@@ -110,15 +163,41 @@
             });
         }
 
+        // Hilfsfunktion: Wandelt {Statusname} im Text in Tooltip-HTML um
+        function formatTextWithTooltips(rawText) {
+            if (!rawText) return "";
+            return rawText.replace(/\{([^}]+)\}/g, (match, statusName) => {
+                const tooltipInfo = statusData[statusName] || "Keine Beschreibung verfügbar.";
+                return `<span class="status-tooltip">${statusName}<span class="tooltip-text">${tooltipInfo}</span></span>`;
+            });
+        }
+
+        function renderPowerCard(powerName) {
+            const p = powerData[powerName] || { text: "Keine Regeldetails hinterlegt." };
+            
+            let statsLine = "";
+            if (p.art) {
+                statsLine = `<div class="power-stats">Art: ${p.art} | Handlung: ${p.action} | Reichweite: ${p.range} | Dauer: ${p.duration}</div>`;
+            }
+
+            const formattedText = formatTextWithTooltips(p.text);
+
+            return `
+                <div class="power-block">
+                    <div class="power-header">${powerName}</div>
+                    ${statsLine}
+                    <div class="power-text">${formattedText}</div>
+                </div>
+            `;
+        }
+
         function generateSpirit() {
             const ks = parseInt(document.getElementById('kraftstufe').value) || 1;
             const typ = document.getElementById('geistertyp').value;
             const data = spiritData[typ];
 
-            // Basisdaten
+            // Basisdaten & Attribute
             document.getElementById('spiritName').innerText = `${data.name} (Kraftstufe ${ks})`;
-            
-            // Attribute
             const attrs = data.attributes(ks);
             const grid = document.getElementById('attributeGrid');
             grid.innerHTML = '';
@@ -136,28 +215,29 @@
             document.getElementById('vwMagisch').innerText = def.magisch;
             document.getElementById('vwWeltlich').innerText = def.weltlich;
 
-            // Fertigkeiten
+            // Fertigkeiten & Angriffe
             document.getElementById('spiritSkills').innerText = data.skills.map(s => `${s} ${ks}`).join(', ');
-
-            // Angriffe
             const attackList = document.getElementById('spiritAttacks');
             attackList.innerHTML = '';
-            data.attacks(ks).forEach(atk => {
-                attackList.innerHTML += `<li>${atk}</li>`;
+            data.attacks(ks).forEach(atk => attackList.innerHTML += `<li>${atk}</li>`);
+
+            // Kräfte (Basis + Zusatzkräfte kombiniert als Detail-Karten ausgeben)
+            const selectedExtras = Array.from(document.querySelectorAll('.opt-power-cb:checked')).map(cb => cb.value);
+            const allPowers = [...data.powers, ...selectedExtras];
+
+            const powersContainer = document.getElementById('spiritPowersList');
+            powersContainer.innerHTML = '';
+            allPowers.forEach(powerName => {
+                powersContainer.innerHTML += renderPowerCard(powerName);
             });
 
-            // Kräfte & Schwächen
-            document.getElementById('spiritPowers').innerText = data.powers.join(', ');
+            // Schwächen
             document.getElementById('spiritWeaknesses').innerText = data.weaknesses.join(', ');
-
-            // Gewählte Zusatzkräfte auslesen
-            const selectedExtras = Array.from(document.querySelectorAll('.opt-power-cb:checked')).map(cb => cb.value);
-            document.getElementById('spiritExtraPowers').innerText = selectedExtras.length > 0 ? selectedExtras.join(', ') : 'Keine ausgewählt';
 
             document.getElementById('output').style.display = 'block';
         }
 
-        // Initiales Rendering beim Laden der Seite
+        // Initiales Rendering
         renderOptionalPowers();
     </script>
 </body>
