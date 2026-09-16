@@ -133,6 +133,14 @@
                 select.appendChild(option);
             }
         }
+
+        function getPowerData(powerName) {
+            if (powerData[powerName]) return powerData[powerName];
+            // Falls Name Klammern enthält (z.B. "Elementarer Angriff (Feuer)"), nach Basisnamen suchen
+            const baseName = powerName.split('(')[0].trim();
+            if (powerData[baseName]) return powerData[baseName];
+            return { shortDesc: "Keine Kurzbeschreibung verfügbar.", text: "Keine Regeldetails hinterlegt." };
+        }
         
         function renderOptionalPowers() {
             const ks = parseInt(document.getElementById('kraftstufe').value) || 1;
@@ -229,15 +237,29 @@
             document.getElementById('vwMagisch').innerText = def.magisch;
             document.getElementById('vwWeltlich').innerText = def.weltlich;
 
-            // Fertigkeiten & Angriffe
-            document.getElementById('spiritSkills').innerText = data.skills.map(s => `${s} ${ks}`).join(', ');
-            const attackList = document.getElementById('spiritAttacks');
-            attackList.innerHTML = '';
-            data.attacks(ks).forEach(atk => attackList.innerHTML += `<li>${atk}</li>`);
-
-            // Kräfte (Basis + Zusatzkräfte kombiniert als Detail-Karten ausgeben)
+             // Kräfte (Basis + Zusatzkräfte kombiniert als Detail-Karten ausgeben)
             const selectedExtras = Array.from(document.querySelectorAll('.opt-power-cb:checked')).map(cb => cb.value);
             const allPowers = [...data.powers, ...selectedExtras];
+
+            // Fertigkeiten & Angriffe
+            document.getElementById('spiritSkills').innerText = data.skills.map(s => `${s} ${ks}`).join(', ');
+            
+            const attackList = document.getElementById('spiritAttacks');
+            attackList.innerHTML = '';
+            
+            // Basis-Angriffe des Geists (z.B. Fäuste bei Geist des Menschen), falls vorhanden
+            if (data.baseAttacks) {
+                data.baseAttacks(ks).forEach(atk => attackList.innerHTML += `<li>${atk}</li>`);
+            }
+            
+            // Angriffe aus Kräften generieren
+            allPowers.forEach(powerName => {
+                const pInfo = getPowerData(powerName);
+                if (pInfo && pInfo.getAttack) {
+                    const formattedAttack = formatTextWithTooltips(pInfo.getAttack(ks, powerName));
+                    attackList.innerHTML += `<li>${formattedAttack}</li>`;
+                }
+            });           
 
             const powersContainer = document.getElementById('spiritPowersList');
             powersContainer.innerHTML = '';
