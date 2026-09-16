@@ -18,10 +18,7 @@ const spiritData = {
         powers: ["Astrale Gestalt", "Bewusstsein", "Elementarer Angriff (Feuer)", "Energieaura (Feuer)", "Materialisieren", "Unfall", "Verschlingen (Feuer)", "Verwirrung"],
         weaknesses: ["Allergie (Kälte, Schwer)", "Verwundbarkeit (Feuerlöscher)"],
         optionalPowers: ["Gifthauch", "Grauen", "Schutz", "Suche"],
-        attacks: (ks) => [
-            `<strong>Elementarer Angriff:</strong> Schaden ${ks}K | Angriffswerte [${ks * 2} / ${(ks * 2) - 2} / ${(ks * 2) - 8} / ${(ks * 2) - 10} / -]`,
-            `<strong>Verschlingen:</strong> Schaden ${ks + 2}K + Brennend | Angriffswerte [${(ks * 2) + 1} / - / - / - / -]`
-        ]
+        attacks: (ks) => []
     },
     erd: {
         name: "Erdgeist",
@@ -42,9 +39,7 @@ const spiritData = {
         powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Bindung", "Materialisieren", "Schutz", "Suche"],
         weaknesses: ["Allergie (Elektrizität, Schwer)"],
         optionalPowers: ["Elementarer Angriff (Chemisch)", "Grauen", "Verschleierung", "Verschlingen (Erde)", "Verwirrung"],
-        attacks: (ks) => [
-            `<strong>Elementarer Angriff:</strong> Schaden ${ks}K | Angriffswerte [${ks * 2} / ${(ks * 2) - 2} / ${(ks * 2) - 8} / ${(ks * 2) - 10} / -]`
-        ]
+        attacks: (ks) => []
     },
     luft: {
         name: "Luftgeist",
@@ -65,10 +60,7 @@ const spiritData = {
         powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Materialisieren", "Suche", "Unfall", "Verschleierung", "Verschlingen (Luft)", "Verwirrung"],
         weaknesses: ["Allergie (Toxine mit Inhalationsvektor, Schwer)"],
         optionalPowers: ["Elementarer Angriff (Elektrizität oder Kälte)", "Energieaura (Elektrizität oder Kälte)", "Gifthauch", "Grauen", "Psychokinese", "Schutz"],
-        attacks: (ks) => [
-            `<strong>Elementarer Angriff:</strong> Schaden ${ks}K | Angriffswerte [${ks * 2} / ${(ks * 2) - 2} / ${(ks * 2) - 8} / ${(ks * 2) - 10} / -]`,
-            `<strong>Verschlingen:</strong> Schaden ${ks + 2}B + Erschöpft I | Angriffswerte [${(ks * 2) + 1} / - / - / - / -]`
-        ]
+        attacks: (ks) => []
     },
     wasser: {
         name: "Wassergeist",
@@ -89,10 +81,7 @@ const spiritData = {
         powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Materialisieren", "Suche", "Verschleierung", "Verschlingen (Wasser)", "Verwirrung"],
         weaknesses: ["Allergie (Feuer, Schwer)"],
         optionalPowers: ["Bindung", "Elementarer Angriff (Kälte)", "Energieaura (Kälte)", "Schutz", "Unfall", "Wetterbeherrschung"],
-        attacks: (ks) => [
-            `<strong>Elementarer Angriff:</strong> Schaden ${ks}K | Angriffswerte [${ks * 2} / ${(ks * 2) - 2} / ${(ks * 2) - 8} / ${(ks * 2) - 10} / -]`,
-            `<strong>Verschlingen:</strong> Schaden ${ks + 2}B + Nass + Erschöpft I | Angriffswerte [${(ks * 2) + 2} / - / - / - / -]`
-        ]
+        attacks: (ks) => []
     },
     mensch: {
         name: "Geist des Menschen",
@@ -159,9 +148,7 @@ const spiritData = {
         powers: ["Astrale Gestalt", "Bewusstsein", "Grauen", "Magischer Schutz", "Materialisieren", "Schutz", "Stille", "Verschleierung", "Verschlingen"],
         weaknesses: [],
         optionalPowers: ["Bewegung", "Gifthauch", "Suche", "Unfall", "Verwirrung"],
-        attacks: (ks) => [
-            `<strong>Verschlingen:</strong> Schaden ${ks}K | Angriffswerte [${(ks * 2) + 1} / - / - / - / -]`
-        ]
+        attacks: (ks) => []
     },
     beschuetzer: {
         name: "Beschützergeist",
@@ -247,9 +234,6 @@ const spiritData = {
         powers: ["Astrale Gestalt", "Bewusstsein", "Elementarer Angriff (Strahlung)", "Energieaura (Strahlung)", "Hexerei", "Materialisieren", "Unfall", "Verschlingen (Strahlung)", "Verwirrung"],
         weaknesses: ["Allergie (Blei/Jod, Schwer)", "Verwundbarkeit (Feuerlöscher)"],
         optionalPowers: ["Gifthauch", "Grauen", "Natürlicher Zauberspruch (Strahlenblitz, Strahlenexplosion)", "Schutz", "Suche"],
-        attacks: (ks) => [
-            `<strong>Elementarer Angriff:</strong> Schaden ${ks}K | Angriffswerte [${ks * 2} / ${(ks * 2) - 2} / ${(ks * 2) - 8} / ${(ks * 2) - 10} / -]`,
-            `<strong>Verschlingen:</strong> Schaden ${ks}K + Verstrahlt (${ks}) | Angriffswerte [${(ks * 2) + 1} / - / - / - / -]`
-        ]
+        attacks: (ks) => []
     }
 };
