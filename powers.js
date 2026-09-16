@@ -60,5 +60,21 @@ const powerData = {
 
             return `<strong>Elementarer Angriff (${element}):</strong> Schaden ${ks}K (${element})${statusText} | Probe: ${pool} (Geschicklichkeit + Magie) | AW ${formattedAWs}`;
         }
+    },
+    "Natürliche Waffe": {
+        shortDesc: "Verwandelt waffenlose Nahkampfangriffe in körperlichen Schaden.",
+        art: "P",
+        action: "Auto",
+        range: "B",
+        duration: "Sofort",
+        text: "Zähne, Klauen, ein stacheliger Schwanz – der Critter ist von der Natur mit einem Werkzeug ausgestattet worden, mit dem er anderen Körperlichen Schaden zufügen kann. Ein Critter verwendet die Fertigkeit <em>Nahkampf</em> für eine natürliche Nahkampfwaffe. Ein dualer Critter mit einer Natürlichen Nahkampfwaffe kann diese Kraft auch gegen astrale Ziele innerhalb seiner Reichweite einsetzen."
+    },
+    "Energieaura": {
+        shortDesc: "Hüllt den Critter in Energie; erhöht Nahkampfschaden und AW und fügt Angreifern Schaden zu.",
+        art: "P",
+        action: "Auto",
+        range: "Selbst",
+        duration: "Immer",
+        text: "Der Critter ist von einem Feld zerstörerischer Energie umgeben, die die Form von Feuer, Kälte, Elektrizität, Strahlung oder einer ätzenden chemischen Substanz haben kann. Die Kraft bezieht sich immer auf ein bestimmtes Element.<br>Der Critter erhöht den Schadenswert jedes Nahkampfangriffs um sein halbes Magieattribut (aufgerundet). Die Schadensart versetzt das Opfer in den entsprechenden Status – {Gebrutzelt} (Elektrizität), {Brennend} (Feuer), {Verätzt} (Chemisch), {Unterkühlt} (Kälte) oder {Verstrahlt} (Strahlung) – und erhöht den Angriffswert um das Magieattribut des Critters.<br>Erfolgreiche waffenlose Nahkampfangriffe gegen einen Critter mit einer Energieaura fügen dem Angreifer ebenfalls Schaden in Höhe von (Magie)K + Status zu."
     }
 };
