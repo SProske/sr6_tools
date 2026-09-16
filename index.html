@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SR6 Geister-Generator (Prototyp)</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; line-height: 1.6; }
+        .card { border: 1px solid #ccc; padding: 15px; border-radius: 8px; background-color: #f9f9f9; margin-top: 20px; }
+        .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; }
+        .stat-box { background: #fff; border: 1px solid #ddd; padding: 5px; text-align: center; border-radius: 4px; }
+        label { font-weight: bold; }
+        input, select, button { padding: 8px; margin-top: 5px; margin-bottom: 15px; width: 100%; box-sizing: border-box; }
+        button { background-color: #b22222; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 4px; }
+        button:hover { background-color: #8b0000; }
+    </style>
+</head>
+<body>
+
+    <h1>Shadowrun 6 – Geister-Generator</h1>
+
+    <label for="kraftstufe">Kraftstufe (K):</label>
+    <input type="number" id="kraftstufe" min="1" max="12" value="4">
+
+    <label for="geistertyp">Geistertyp:</label>
+    <select id="geistertyp">
+        <option value="feuer">Feuergeist</option>
+        <option value="luft">Luftgeist</option>
+    </select>
+
+    <button onclick="generateSpirit()">Geist generieren</button>
+
+    <div id="output" class="card" style="display: none;">
+        <h2 id="spiritName">Geist</h2>
+        <p><strong>Kraftstufe:</strong> <span id="spiritLevel"></span></p>
+
+        <h3>Attribute</h3>
+        <div class="stat-grid" id="attributeGrid"></div>
+
+        <h3>Kampf- & Poolwerte</h3>
+        <p><strong>Initiative:</strong> <span id="spiritInit"></span></p>
+        <p><strong>Verteidigungspool:</strong> <span id="spiritDef"></span></p>
+    </div>
+
+    <script>
+        function generateSpirit() {
+            const k = parseInt(document.getElementById('kraftstufe').value);
+            const typ = document.getElementById('geistertyp').value;
+
+            if (isNaN(k) || k < 1) return;
+
+            let stats = {};
+            let initText = "";
+            let defPool = 0;
+            let name = "";
+
+            if (typ === 'feuer') {
+                name = `Feuergeist (Stufe ${k})`;
+                // Formelbeispiel für Feuergeist
+                stats = {
+                    "KON": k + 2,
+                    "GES": k + 3,
+                    "REA": k + 3,
+                    "STR": k,
+                    "CHA": k,
+                    "INT": k,
+                    "LOG": k,
+                    "WIL": k
+                };
+                initText = `${(k + 3) * 2} + 2W6`;
+                defPool = (k + 3) + k; // REA + INT (Beispiel)
+            } else if (typ === 'luft') {
+                name = `Luftgeist (Stufe ${k})`;
+                stats = {
+                    "KON": k,
+                    "GES": k + 4,
+                    "REA": k + 4,
+                    "STR": k - 1 < 1 ? 1 : k - 1,
+                    "CHA": k,
+                    "INT": k,
+                    "LOG": k,
+                    "WIL": k
+                };
+                initText = `${(k + 4) * 2} + 3W6`;
+                defPool = (k + 4) + k;
+            }
+
+            // UI aktualisieren
+            document.getElementById('spiritName').innerText = name;
+            document.getElementById('spiritLevel').innerText = k;
+
+            const grid = document.getElementById('attributeGrid');
+            grid.innerHTML = '';
+            for (const [key, val] of Object.entries(stats)) {
+                grid.innerHTML += `<div class="stat-box"><strong>${key}</strong><br>${val}</div>`;
+            }
+
+            document.getElementById('spiritInit').innerText = initText;
+            document.getElementById('spiritDef').innerText = defPool;
+
+            document.getElementById('output').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
