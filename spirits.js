@@ -1,4 +1,10 @@
-const spiritData = {
+export const SpiritCalculations = {
+    health: (ks) => Math.floor(ks / 2) + 8,
+    init: (ks, bonus = 0) => `${(ks * 2) + bonus} + 2W6`,
+    astralInit: (ks, bonus = 0) => `${(ks * 2) + bonus} + 3W6`
+};
+
+export const spiritData = {
     feuer: {
         name: "Feuergeist",
         movement: "5 / 10 / +5",
@@ -6,14 +12,10 @@ const spiritData = {
             "KON": ks + 1, "GES": ks + 2, "REA": ks + 3, "STR": Math.max(1, ks - 2),
             "WIL": ks, "LOG": ks, "INT": ks + 1, "CHA": ks, "M": ks, "ESS": ks
         }),
-        init: (ks) => `${(ks * 2) + 4} + 2W6`,
-        astralInit: (ks) => `${(ks * 2) + 1} + 3W6`,
-        health: (ks) => Math.floor(ks / 2) + 8,
-        defense: (ks) => ({
-            astral: ks + 1,
-            magisch: ks + 1,
-            weltlich: (ks * 2) + 1
-        }),
+        init: (ks) => SpiritCalculations.init(ks, 4),
+        astralInit: (ks) => SpiritCalculations.astralInit(ks, 1),
+        health: SpiritCalculations.health,
+        defense: (ks) => ({ astral: ks + 1, magisch: ks + 1, weltlich: (ks * 2) + 1 }),
         skills: ["Astral", "Athletik", "Exotische Waffen", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewusstsein", "Elementarer Angriff (Feuer)", "Energieaura (Feuer)", "Materialisieren", "Unfall", "Verschlingen (Feuer)", "Verwirrung"],
         weaknesses: ["Allergie (Kälte, Schwer)", "Verwundbarkeit (Feuerlöscher)"],
@@ -26,14 +28,10 @@ const spiritData = {
             "KON": ks + 4, "GES": Math.max(1, ks - 2), "REA": Math.max(1, ks - 1), "STR": ks + 4,
             "WIL": ks, "LOG": Math.max(1, ks - 1), "INT": ks, "CHA": ks, "M": ks, "ESS": ks
         }),
-        init: (ks) => `${(ks * 2) - 1} + 2W6`,
-        astralInit: (ks) => `${(ks * 2) - 1} + 3W6`,
-        health: (ks) => Math.floor(ks / 2) + 8,
-        defense: (ks) => ({
-            astral: ks,
-            magisch: ks + 4,
-            weltlich: (ks * 2) + 4
-        }),
+        init: (ks) => SpiritCalculations.init(ks, -1),
+        astralInit: (ks) => SpiritCalculations.astralInit(ks, -1),
+        health: SpiritCalculations.health,
+        defense: (ks) => ({ astral: ks, magisch: ks + 4, weltlich: (ks * 2) + 4 }),
         skills: ["Astral", "Exotische Waffen", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Bindung", "Materialisieren", "Schutz", "Suche"],
         weaknesses: ["Allergie (Elektrizität, Schwer)"],
@@ -46,14 +44,10 @@ const spiritData = {
             "KON": Math.max(1, ks - 2), "GES": ks + 3, "REA": ks + 4, "STR": Math.max(1, ks - 3),
             "WIL": ks, "LOG": ks, "INT": ks, "CHA": ks, "M": ks, "ESS": ks
         }),
-        init: (ks) => `${(ks * 2) + 4} + 2W6`,
-        astralInit: (ks) => `${(ks * 2)} + 3W6`,
-        health: (ks) => Math.floor(ks / 2) + 8,
-        defense: (ks) => ({
-            astral: ks,
-            magisch: Math.max(0, ks - 2),
-            weltlich: Math.max(0, (ks * 2) - 2)
-        }),
+        init: (ks) => SpiritCalculations.init(ks, 4),
+        astralInit: (ks) => SpiritCalculations.astralInit(ks, 0),
+        health: SpiritCalculations.health,
+        defense: (ks) => ({ astral: ks, magisch: Math.max(0, ks - 2), weltlich: Math.max(0, (ks * 2) - 2) }),
         skills: ["Astral", "Athletik", "Exotische Waffen", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Materialisieren", "Suche", "Unfall", "Verschleierung", "Verschlingen (Luft)", "Verwirrung"],
         weaknesses: ["Allergie (Toxine mit Inhalationsvektor, Schwer)"],
@@ -66,14 +60,10 @@ const spiritData = {
             "KON": ks, "GES": ks + 1, "REA": ks + 2, "STR": ks,
             "WIL": ks, "LOG": ks, "INT": ks, "CHA": ks, "M": ks, "ESS": ks
         }),
-        init: (ks) => `${(ks * 2) + 2} + 2W6`,
-        astralInit: (ks) => `${(ks * 2)} + 3W6`,
-        health: (ks) => Math.floor(ks / 2) + 8,
-        defense: (ks) => ({
-            astral: ks,
-            magisch: ks,
-            weltlich: ks * 2
-        }),
+        init: (ks) => SpiritCalculations.init(ks, 2),
+        astralInit: (ks) => SpiritCalculations.astralInit(ks, 0),
+        health: SpiritCalculations.health,
+        defense: (ks) => ({ astral: ks, magisch: ks, weltlich: ks * 2 }),
         skills: ["Astral", "Athletik (Schwimmen)", "Exotische Waffen", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Materialisieren", "Suche", "Verschleierung", "Verschlingen (Wasser)", "Verwirrung"],
         weaknesses: ["Allergie (Feuer, Schwer)"],
@@ -86,14 +76,10 @@ const spiritData = {
             "KON": ks + 1, "GES": ks, "REA": ks + 2, "STR": Math.max(1, ks - 2),
             "WIL": ks, "LOG": ks, "INT": ks + 1, "CHA": ks, "M": ks, "ESS": ks
         }),
-        init: (ks) => `${(ks * 2) + 3} + 2W6`,
-        astralInit: (ks) => `${(ks * 2) + 1} + 3W6`,
-        health: (ks) => Math.floor(ks / 2) + 8,
-        defense: (ks) => ({
-            astral: ks + 1,
-            magisch: ks + 1,
-            weltlich: (ks * 2) + 1
-        }),
+        init: (ks) => SpiritCalculations.init(ks, 3),
+        astralInit: (ks) => SpiritCalculations.astralInit(ks, 1),
+        health: SpiritCalculations.health,
+        defense: (ks) => ({ astral: ks + 1, magisch: ks + 1, weltlich: (ks * 2) + 1 }),
         skills: ["Astral", "Hexerei", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewusstsein", "Einfluss", "Gesteigerte Sinne (Infrarotsicht, Restlichtverstärkung)", "Materialisieren", "Schutz", "Suche", "Unfall", "Verschleierung", "Verwirrung"],
         weaknesses: ["Allergie (Eisenmetalle, Schwer)"],
@@ -106,14 +92,10 @@ const spiritData = {
             "KON": ks + 2, "GES": ks + 1, "REA": ks, "STR": ks + 2,
             "WIL": ks, "LOG": ks, "INT": ks, "CHA": ks, "M": ks, "ESS": ks
         }),
-        init: (ks) => `${ks * 2} + 2W6`,
-        astralInit: (ks) => `${ks * 2} + 3W6`,
-        health: (ks) => Math.floor(ks / 2) + 8,
-        defense: (ks) => ({
-            astral: ks,
-            magisch: ks + 2,
-            weltlich: (ks * 2) + 2
-        }),
+        init: (ks) => SpiritCalculations.init(ks, 0),
+        astralInit: (ks) => SpiritCalculations.astralInit(ks, 0),
+        health: SpiritCalculations.health,
+        defense: (ks) => ({ astral: ks, magisch: ks + 2, weltlich: (ks * 2) + 2 }),
         skills: ["Astral", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Gesteigerte Sinne (Gehör, Geruch, Restlichtverstärkung)", "Grauen", "Materialisieren", "Tierbeherrschung"],
         weaknesses: ["Allergie (Silber, Schwer)"],
@@ -126,14 +108,10 @@ const spiritData = {
             "KON": ks + 2, "GES": Math.max(1, ks - 1), "REA": ks, "STR": ks + 1,
             "WIL": ks, "LOG": Math.max(1, ks - 1), "INT": ks, "CHA": ks, "M": ks, "ESS": ks
         }),
-        init: (ks) => `${ks * 2} + 2W6`,
-        astralInit: (ks) => `${(ks * 2) - 1} + 3W6`,
-        health: (ks) => Math.floor(ks / 2) + 8,
-        defense: (ks) => ({
-            astral: ks,
-            magisch: ks + 2,
-            weltlich: (ks * 2) + 2
-        }),
+        init: (ks) => SpiritCalculations.init(ks, 0),
+        astralInit: (ks) => SpiritCalculations.astralInit(ks, -1),
+        health: SpiritCalculations.health,
+        defense: (ks) => ({ astral: ks, magisch: ks + 2, weltlich: (ks * 2) + 2 }),
         skills: ["Astral", "Exotische Waffen", "Hexerei", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewusstsein", "Grauen", "Magischer Schutz", "Materialisieren", "Schutz", "Stille", "Verschleierung", "Verschlingen"],
         weaknesses: [],
@@ -146,14 +124,10 @@ const spiritData = {
             "KON": ks + 1, "GES": ks + 2, "REA": ks + 3, "STR": ks + 2,
             "WIL": ks, "LOG": ks, "INT": ks, "CHA": ks, "M": ks, "ESS": ks
         }),
-        init: (ks) => `${(ks * 2) + 3} + 2W6`,
-        astralInit: (ks) => `${ks * 2} + 3W6`,
-        health: (ks) => Math.floor(ks / 2) + 8,
-        defense: (ks) => ({
-            astral: ks,
-            magisch: ks + 1,
-            weltlich: (ks * 2) + 1
-        }),
+        init: (ks) => SpiritCalculations.init(ks, 3),
+        astralInit: (ks) => SpiritCalculations.astralInit(ks, 0),
+        health: SpiritCalculations.health,
+        defense: (ks) => ({ astral: ks, magisch: ks + 1, weltlich: (ks * 2) + 1 }),
         skills: ["Astral", "Exotische Waffen", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Grauen", "Magischer Schutz", "Materialisieren", "Schutz"],
         weaknesses: [],
@@ -166,14 +140,10 @@ const spiritData = {
             "KON": ks, "GES": ks, "REA": ks + 2, "STR": ks + 2,
             "WIL": ks, "LOG": ks, "INT": ks, "CHA": ks, "M": ks, "ESS": ks
         }),
-        init: (ks) => `${(ks * 2) + 2} + 2W6`,
-        astralInit: (ks) => `${ks * 2} + 3W6`,
-        health: (ks) => Math.floor(ks / 2) + 8,
-        defense: (ks) => ({
-            astral: ks,
-            magisch: ks,
-            weltlich: ks * 2
-        }),
+        init: (ks) => SpiritCalculations.init(ks, 2),
+        astralInit: (ks) => SpiritCalculations.astralInit(ks, 0),
+        health: SpiritCalculations.health,
+        defense: (ks) => ({ astral: ks, magisch: ks, weltlich: ks * 2 }),
         skills: ["Astral", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Bindung", "Fertigkeit (Biotech, Elektronik, Mechanik, Natur oder Steuern + Spezi & Wissen)", "Materialisieren", "Suche", "Unfall"],
         weaknesses: [],
@@ -186,14 +156,10 @@ const spiritData = {
             "KON": ks + 3, "GES": Math.max(1, ks - 1), "REA": ks + 2, "STR": ks + 1,
             "WIL": ks, "LOG": ks, "INT": ks, "CHA": ks, "M": ks, "ESS": ks
         }),
-        init: (ks) => `${(ks * 2) + 2} + 2W6`,
-        astralInit: (ks) => `${ks * 2} + 3W6`,
-        health: (ks) => Math.floor(ks / 2) + 8,
-        defense: (ks) => ({
-            astral: ks,
-            magisch: ks + 3,
-            weltlich: (ks * 2) + 3
-        }),
+        init: (ks) => SpiritCalculations.init(ks, 2),
+        astralInit: (ks) => SpiritCalculations.astralInit(ks, 0),
+        health: SpiritCalculations.health,
+        defense: (ks) => ({ astral: ks, magisch: ks + 3, weltlich: (ks * 2) + 3 }),
         skills: ["Astral", "Hexerei", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewusstsein", "Magischer Schutz", "Materialisieren", "Schatten", "Schutz", "Suche", "Verwirrung", "Weissagung"],
         weaknesses: [],
@@ -206,14 +172,10 @@ const spiritData = {
             "KON": ks + 1, "GES": ks + 2, "REA": ks + 3, "STR": Math.max(1, ks - 2),
             "WIL": ks, "LOG": ks, "INT": ks + 1, "CHA": ks, "M": ks, "ESS": ks
         }),
-        init: (ks) => `${(ks * 2) + 4} + 2W6`,
-        astralInit: (ks) => `${(ks * 2) + 1} + 3W6`,
-        health: (ks) => Math.floor(ks / 2) + 8,
-        defense: (ks) => ({
-            astral: ks + 1,
-            magisch: ks + 1,
-            weltlich: (ks * 2) + 1
-        }),
+        init: (ks) => SpiritCalculations.init(ks, 4),
+        astralInit: (ks) => SpiritCalculations.astralInit(ks, 1),
+        health: SpiritCalculations.health,
+        defense: (ks) => ({ astral: ks + 1, magisch: ks + 1, weltlich: (ks * 2) + 1 }),
         skills: ["Astral", "Athletik", "Exotische Waffen", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewusstsein", "Elementarer Angriff (Strahlung)", "Energieaura (Strahlung)", "Hexerei", "Materialisieren", "Unfall", "Verschlingen (Strahlung)", "Verwirrung"],
         weaknesses: ["Allergie (Blei/Jod, Schwer)", "Verwundbarkeit (Feuerlöscher)"],
