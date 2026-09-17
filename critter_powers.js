@@ -158,6 +158,27 @@ export const powerData = {
                 rangeBands: [baseAw, 0, 0, 0, 0]
             };
         }
+    },
+    "Gifthauch": {
+        shortDesc: "Setzt Opfer über einen Sprühangriff mit einem Betäubungsgift außer Gefecht.",
+        art: "P", action: "H", range: "Speziell", duration: "Sofort",
+        text: "Ein Critter mit dieser Kraft kann seine Opfer mit einem ekelerregenden Gestank außer Gefecht setzen. Spieltechnisch ist dies eine Sprühangriffsprobe auf <em>Geschicklichkeit + Magie</em> des Critters mit den Angriffswerten Magie × 2 / Magie / – / – / –. Für den Giftangriff gilt: Vektor: Inhalation; Geschwindigkeit: Sofort; Kraft: Magie des Critters; Wirkung: Betäubungsschaden, {Benommen}, {Übelkeit}. Panzerung ist nutzlos, aber eine aktive Chemische Versiegelung funktioniert normal.",
+
+        getGrantedAttack: (spirit, powerName) => {
+            const mag = spirit.attributes["M"] || spirit.ks;
+            const ges = spirit.attributes["GES"] || spirit.ks;
+
+            return {
+                name: "Gifthauch",
+                damageValue: mag,
+                damageType: "B",
+                element: null,
+                status: "Benommen, Übelkeit",
+                poolValue: ges + mag,
+                poolDesc: "Geschicklichkeit + Magie",
+                rangeBands: [mag * 2, mag, 0, 0, 0]
+            };
+        }
     }
 };
 
