@@ -111,23 +111,35 @@ export class Spirit {
     getSkills() {
         const result = this.skills.map(name => ({ name, rating: this.ks }));
 
-        // Primary Skill aus Hauptkraft ergänzen
+        // 1. Hauptfertigkeit (z. B. beim Helfergeist)
         if (this.config.primarySkill) {
-            const specText = this.config.spec ? ` (${this.config.spec} +2)` : "";
+            const specText = this.config.primarySpec ? ` (${this.config.primarySpec} +2)` : "";
             result.push({ name: `${this.config.primarySkill}${specText}`, rating: this.ks });
+
+            if (this.config.primaryKnowledge) {
+                result.push({ name: `[Wissen] ${this.config.primaryKnowledge}`, rating: this.ks });
+            }
         }
 
-        // Wissen/Spezialisierung als eigene Notiz oder Wissensfertigkeit
-        if (this.config.knowledge) {
-            result.push({ name: `[Wissen] ${this.config.knowledge}`, rating: this.ks });
-        }
+        // 2. Alle in this.powers enthaltenen Fertigkeits-Kräfte scannen
+        this.powers.forEach(powerName => {
+            const { baseName, param } = parsePowerString(powerName);
+            
+            // Reagiert auf z. B. "Fertigkeit (Biotech)", ignoriert Komma-Listen
+            if (baseName === "Fertigkeit" && param && !param.includes(',')) {
+                // Überspringen, falls es bereits die Hauptfertigkeit ist
+                if (param !== this.config.primarySkill) {
+                    const optConfig = this.config.optionalSkillsConfigs?.[param] || {};
+                    const specText = optConfig.spec ? ` (${optConfig.spec} +2)` : "";
 
-        // Eventuell gewählte Zusatzfertigkeiten aus optionalen Kräften ergänzen
-        if (this.config.optionalSkills) {
-            this.config.optionalSkills.forEach(sk => {
-                result.push({ name: sk, rating: this.ks });
-            });
-        }
+                    result.push({ name: `${param}${specText}`, rating: this.ks });
+
+                    if (optConfig.knowledge) {
+                        result.push({ name: `[Wissen] ${optConfig.knowledge}`, rating: this.ks });
+                    }
+                }
+            }
+        });
 
         return result;
     }
