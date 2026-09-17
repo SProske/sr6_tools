@@ -1,5 +1,5 @@
 import { Spirit, spiritDefinitions } from './spirits.js';
-import { getPowerData } from './critter_powers.js';
+import { getPowerData, parsePowerString } from './critter_powers.js';
 import { statusData } from './status.js';
 
 function formatMovement(movement) {
@@ -56,14 +56,12 @@ function populateSpiritDropdown() {
 function renderOptionalPowers() {
     const ks = parseInt(document.getElementById('kraftstufe').value) || 1;
     const typ = document.getElementById('geistertyp').value;
-
     const selectedSkill = document.getElementById('primarySkillSelect')?.value || null;
     
     const maxAllowed = Spirit.getMaxOptionalPowers(ks);
     const optionalPowers = Spirit.getOptionalPowersForType(typ, selectedSkill);
 
     document.getElementById('maxOptionalCount').innerText = maxAllowed;
-
     const listContainer = document.getElementById('optionalPowersList');
 
     if (maxAllowed === 0) {
@@ -73,19 +71,42 @@ function renderOptionalPowers() {
 
     listContainer.innerHTML = optionalPowers.map(powerName => {
         const info = getPowerData(powerName);
+        const { baseName, param } = parsePowerString(powerName);
+        const isSingleSkill = baseName === "Fertigkeit" && param && !param.includes(',');
+
         return `
-            <div class="checkbox-item">
-                <input type="checkbox" class="opt-power-cb" value="${powerName}">
-                <div>
-                    <strong>${powerName}</strong>
-                    <span class="opt-desc">${info.shortDesc}</span>
+            <div class="checkbox-item-wrapper" style="margin-bottom: 8px;">
+                <div class="checkbox-item">
+                    <input type="checkbox" class="opt-power-cb" value="${powerName}" data-skill="${isSingleSkill ? param : ''}">
+                    <div>
+                        <strong>${powerName}</strong>
+                        <span class="opt-desc">${info.shortDesc}</span>
+                    </div>
                 </div>
+                ${isSingleSkill ? `
+                    <div class="opt-skill-config" id="opt-config-${param}" style="display:none; margin-left: 24px; margin-top: 4px;">
+                        <input type="text" class="opt-spec-input" data-for-skill="${param}" placeholder="Spezialisierung für ${param} (optional)" style="margin-right: 4px;">
+                        <input type="text" class="opt-know-input" data-for-skill="${param}" placeholder="Wissensfertigkeit für ${param} (optional)">
+                    </div>
+                ` : ''}
             </div>
         `;
     }).join('');
 
+    // Event-Listener zum Limitieren und für das Ein-/Ausblenden der Config-Felder
     listContainer.querySelectorAll('.opt-power-cb').forEach(cb => {
-        cb.addEventListener('change', () => limitCheckboxes(maxAllowed));
+        cb.addEventListener('change', (e) => {
+            limitCheckboxes(maxAllowed);
+            
+            // Ein-/Ausblenden der Spezialisierungs-Eingabefelder für optionale Fertigkeiten
+            const skillName = e.target.dataset.skill;
+            if (skillName) {
+                const configBox = document.getElementById(`opt-config-${skillName}`);
+                if (configBox) {
+                    configBox.style.display = e.target.checked ? 'block' : 'none';
+                }
+            }
+        });
     });
 }
 
@@ -151,16 +172,31 @@ function generateSpirit() {
     const typ = document.getElementById('geistertyp').value;
     const selectedExtras = Array.from(document.querySelectorAll('.opt-power-cb:checked')).map(cb => cb.value);
 
-    // Config-Eingaben für Helfergeist einsammeln
+    // Eingaben für optionale Fertigkeiten einsammeln
+    const optionalSkillsConfigs = {};
+    document.querySelectorAll('.opt-power-cb:checked').forEach(cb => {
+        const skillName = cb.dataset.skill;
+        if (skillName) {
+            const specInput = document.querySelector(`.opt-spec-input[data-for-skill="${skillName}"]`);
+            const knowInput = document.querySelector(`.opt-know-input[data-for-skill="${skillName}"]`);
+            optionalSkillsConfigs[skillName] = {
+                spec: specInput?.value?.trim() || '',
+                knowledge: knowInput?.value?.trim() || ''
+            };
+        }
+    });
+
+    // Gesamt-Config für das Spirit-Objekt zusammenstellen
     const config = {
         primarySkill: document.getElementById('primarySkillSelect')?.value || null,
-        spec: document.getElementById('primarySpecInput')?.value?.trim() || '',
-        knowledge: document.getElementById('primaryKnowledgeInput')?.value?.trim() || ''
+        primarySpec: document.getElementById('primarySpecInput')?.value?.trim() || '',
+        primaryKnowledge: document.getElementById('primaryKnowledgeInput')?.value?.trim() || '',
+        optionalSkillsConfigs: optionalSkillsConfigs
     };
 
-    // Geist-Instanz mit Config erzeugen
     const spirit = new Spirit(typ, ks, selectedExtras, config);
 
+    // UI-Rendering
     document.getElementById('spiritName').innerText = `${spirit.name} (Kraftstufe ${spirit.ks})`;
     
     document.getElementById('attributeGrid').innerHTML = Object.entries(spirit.attributes)
@@ -176,6 +212,7 @@ function generateSpirit() {
     document.getElementById('vwMagisch').innerText = spirit.defense.magisch;
     document.getElementById('vwWeltlich').innerText = spirit.defense.weltlich;
 
+    // Gerenderte Fertigkeitenliste inklusive Haupt- und Zusatzfertigkeiten!
     document.getElementById('spiritSkills').innerText = spirit.getSkills()
         .map(s => `${s.name} ${s.rating}`)
         .join(', ');
