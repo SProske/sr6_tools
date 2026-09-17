@@ -242,6 +242,41 @@ export const powerData = {
         shortDesc: "Bewegt Objekte telekinetisch und führt damit Aktionen aus.",
         art: "P", action: "N", range: "BF", duration: "Aufrechterhalten",
         text: "Bewegt Objekte mittels Geisteskraft. Eine Probe auf <em>Willenskraft + Magie</em> bestimmt die effektive Stärke und Geschicklichkeit der unsichtbaren Hand (Höhe der erzielten Nettoerfolge). Objekte können 10 Meter pro Kampfrunde bewegt werden; Nah- oder Fernkampfangriffe sind mit passenden Fertigkeiten möglich."
+    },
+    "Schutz": {
+        shortDesc: "Schützt Ziele vor Patzern und der Kraft Unfall.",
+        art: "P", action: "H", range: "BF", duration: "Aufrechterhalten",
+        text: "Schützt den Critter und bis zu <em>Magie</em> Ziele vor Patzern und der Kraft <em>Unfall</em>. Unter Einwirkung der Kraft gelten Kritische Patzer nur als einfache Patzer und einfache Patzer als normale Fehlschläge. Wird <em>Unfall</em> auf ein geschütztes Ziel gewirkt, neutralisiert Schutz dessen Auswirkung und der Test verläuft normal."
+    },
+    "Suche": {
+        shortDesc: "Spürt Personen, Orte oder Gegenstände über eine erweiterte Probe auf.",
+        art: "P", action: "H", range: "Speziell", duration: "Speziell",
+        text: "Spürt ein bekanntes oder per Bild übermitteltes Ziel auf (Erweiterte Probe auf <em>Intuition + Magie</em> [Intervall: 5, 10 Min.]). Unbelebte Objekte erfordern Materialisierung. Typische Modifikatoren auf den Schwellenwert: Entfernung (+1 pro km), Hüter (+(KS × 5)), aktive <em>Verschleierung</em> (+(Magie des Verschleiernden × 3)), Unbelebter Gegenstand/Ort (+5)."
+    },
+    "Tierbeherrschung": {
+        shortDesc: "Kontrolliert Tierverhalten (bis zu Charisma × 5 kleine oder Charisma große Tiere).",
+        art: "M", action: "H", range: "BF", duration: "Aufrechterhalten",
+        text: "Manipuliert Tiere zur Ausführung natürlicher Verhaltensweisen. Neue Befehle erfordern Sichtkontakt; einmal erteilte Befehle werden für <em>Charisma</em> Minuten befolgt. Kapazität: <em>Charisma × 5</em> kleine Tiere (Ratten, Vögel), <em>Charisma</em> große Tiere (Wölfe, Bären) oder 1 paranormaler Critter. Wirkt nicht gegen Wesen mit der Kraft <em>Bewusstsein</em>."
+    },
+    "Unfall": {
+        shortDesc: "Provoziert bei einem Ziel einen Patzer oder Kritischen Patzer.",
+        art: "P", action: "H", range: "BF", duration: "Sofort",
+        text: "Provoziert einen scheinbar natürlichen Unfall per Vergleichender Probe auf <em>Willenskraft + Magie</em> gegen <em>Reaktion + Charisma</em> des Opfers. Bei Erfolg erleidet das Ziel die Auswirkungen eines Patzers; bei 4 oder mehr Nettoerfolgen gilt die Aktion als Kritischer Patzer. Kann durch die Kraft <em>Schutz</em> neutralisiert werden."
+    },
+    "Verschleierung": {
+        shortDesc: "Versteckt Ziele magisch und gewährt den Status Unsichtbar (Verbessert).",
+        art: "P", action: "H", range: "BF", duration: "Aufrechterhalten",
+        text: "Versteckt bis zu <em>Magie</em> metamenschengroße Ziele (Konstitution ≤ 5; Konstitution > 5 zählt als 2 Ziele) oder <em>Magie × 5</em> kleine Objekte. Aktiviert den Status {Unsichtbar (Verbessert)} in Höhe des <em>Magieattributs</em>. Im Kampf ist die Haupthandlung <em>Genau beobachten</em> erforderlich, um eine Wahrnehmungsprobe zum Durchschauen der Tarnung ablegen zu dürfen."
+    },
+    "Verwirrung": {
+        shortDesc: "Ruft Verwirrung und Benommenheit hervor.",
+        art: "M", action: "H", range: "BF", duration: "Aufrechterhalten",
+        text: "Versetzt ein Ziel per Vergleichender Probe auf <em>Willenskraft + Magie</em> gegen <em>Willenskraft + Logik</em> in Verwirrung. Bei Nettoerfolgen erhält das Opfer den Status {Verwirrt} in Höhe der Nettoerfolge sowie zusätzlich den Status {Benommen}."
+    },
+    "Wetterbeherrschung": {
+        shortDesc: "Manipuliert schrittweise das örtliche Wetter.",
+        art: "P", action: "H", range: "BF", duration: "Aufrechterhalten",
+        text: "Manipuliert die örtlichen Wetterbedingungen im Rahmen des natürlich Möglichen. Das Wetter verändert sich allmählich über eine Erweiterte Probe auf <em>Willenskraft + Magie</em> (Schwellenwert 10, Intervall: 30 Min.). Erlaubt das Heraufbeschwören von Wetterphänomenen (z. B. Gewitter), jedoch keine gezielte Steuerung einzelner Blitze."
     }
 };
 
