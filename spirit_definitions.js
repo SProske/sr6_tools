@@ -39,7 +39,7 @@ export const spiritDefinitions = {
         skills: ["Astral", "Athletik", "Exotische Waffen", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Materialisieren", "Suche", "Unfall", "Verschleierung", "Verschlingen (Luft)", "Verwirrung"],
         weaknesses: ["Allergie (Toxine mit Inhalationsvektor, Schwer)"],
-        optionalPowers: ["Elementarer Angriff (Elektrizität oder Kälte)", "Energieaura (Elektrizität oder Kälte)", "Gifthauch", "Grauen", "Psychokinese", "Schutz"]
+        optionalPowers: ["Elementarer Angriff (Elektrizität, Kälte)", "Energieaura (Elektrizität, Kälte)", "Gifthauch", "Grauen", "Psychokinese", "Schutz"]
     },
     wasser: {
         name: "Wassergeist",
@@ -99,7 +99,7 @@ export const spiritDefinitions = {
         skills: ["Astral", "Exotische Waffen", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Grauen", "Magischer Schutz", "Materialisieren", "Schutz"],
         weaknesses: [],
-        optionalPowers: ["Elementarer Angriff (Element nach Wahl)", "Fertigkeitsspezialisierung (Nahkampf)", "Natürliche Waffe", "Psychokinese", "Tierbeherrschung", "Verschleierung"]
+        optionalPowers: ["Elementarer Angriff (Feuer, Elektrizität, Kälte, Chemisch, Strahlung)", "Fertigkeitsspezialisierung (Nahkampf)", "Natürliche Waffe", "Psychokinese", "Tierbeherrschung", "Verschleierung"]
     },
     helfer: {
         name: "Helfergeist",
