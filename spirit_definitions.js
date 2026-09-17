@@ -109,9 +109,9 @@ export const spiritDefinitions = {
         astralInit: (ks) => SpiritCalculations.astralInit(ks, 0),
         defense: (ks) => ({ astral: ks, magisch: ks, weltlich: ks * 2 }),
         skills: ["Astral", "Nahkampf", "Wahrnehmung"],
-        powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Bindung", "Fertigkeit (Biotech, Elektronik, Mechanik, Natur oder Steuern + Spezi & Wissen)", "Materialisieren", "Suche", "Unfall"],
+        powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Bindung", "Fertigkeit (Biotech, Elektronik, Mechanik, Natur, Steuern)", "Materialisieren", "Suche", "Unfall"],
         weaknesses: [],
-        optionalPowers: ["Einfluss", "Fertigkeit (Zusatzwahl s. o.)", "Gesteigerte Sinne (Gehör, Geruch, Infrarotsicht, Restlichtverstärkung)", "Psychokinese", "Verschleierung"]
+        optionalPowers: ["Einfluss", "Fertigkeit (Biotech, Elektronik, Mechanik, Natur, Steuern)", "Gesteigerte Sinne (Gehör, Geruch, Infrarotsicht, Restlichtverstärkung)", "Psychokinese", "Verschleierung"]
     },
     ratgeber: {
         name: "Ratgebergeist",
