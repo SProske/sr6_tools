@@ -1,5 +1,13 @@
 import { ELEMENT_STATUS_MAP } from './status.js';
 
+export function parsePowerString(powerName) {
+    const match = powerName.match(/^([^(]+)(?:\(([^)]+)\))?/);
+    return {
+        baseName: match ? match[1].trim() : powerName.trim(),
+        param: match && match[2] ? match[2].trim() : null
+    };
+}
+
 export const powerData = {
     "Grauen": {
         shortDesc: "Versetzt ein Ziel in Panik und zwingt es zu fliehen.",
@@ -51,10 +59,8 @@ export const powerData = {
         duration: "Sofort",
         text: "Zähne, Klauen, ein stacheliger Schwanz – der Critter ist von der Natur mit einem Werkzeug ausgestattet worden, mit dem er anderen Körperlichen Schaden zufügen kann. Ein Critter verwendet die Fertigkeit <em>Nahkampf</em> für eine natürliche Nahkampfwaffe. Ein dualer Critter mit einer Natürlichen Nahkampfwaffe kann diese Kraft auch gegen astrale Ziele innerhalb seiner Reichweite einsetzen.",
         modifyBaseAttack: (attack, spirit, powerName) => {
-            // Namen aus Klammern extrahieren (z. B. "Kralle/Biss")
-            const match = powerName ? powerName.match(/\(([^)]+)\)/) : null;
-            attack.name = match ? match[1] : "Natürliche Waffe";
-            
+            const { param } = parsePowerString(powerName);
+            attack.name = param || "Natürliche Waffe";
             attack.damageType = "K";
             attack.damageValue = Math.max(2, Math.floor(spirit.ks / 2) - 1);
         }
