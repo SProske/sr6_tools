@@ -17,7 +17,11 @@ function formatAttack(attack) {
     }
 
     if (attack.status) {
-        damageString += ` + {${attack.status}}`;
+        // Wandelt "Brennend, Bewegungsunfähig" sauber in "+ {Brennend} + {Bewegungsunfähig}" um
+        const statusFormatted = attack.status.split(', ')
+            .map(s => `{${s.trim()}}`)
+            .join(' + ');
+        damageString += ` + ${statusFormatted}`;
     }
 
     const awFormatted = attack.rangeBands
@@ -32,7 +36,15 @@ function formatAttack(attack) {
 function formatTextWithTooltips(rawText) {
     if (!rawText) return "";
     return rawText.replace(/\{([^}]+)\}/g, (match, statusName) => {
-        const tooltipInfo = statusData[statusName] || "Keine Beschreibung verfügbar.";
+        // 1. Prüfen auf exakten Treffer (z. B. "Erschöpft I")
+        let tooltipInfo = statusData[statusName];
+        
+        // 2. Fallback: Zahlen/Römische Ziffern entfernen (z. B. "Verwirrt 3" -> "Verwirrt")
+        if (!tooltipInfo) {
+            const baseName = statusName.replace(/\s+(I|II|III|IV|V|\d+)$/i, '').trim();
+            tooltipInfo = statusData[baseName] || "Keine Beschreibung verfügbar.";
+        }
+
         return `<span class="status-tooltip">${statusName}<span class="tooltip-text">${tooltipInfo}</span></span>`;
     });
 }
@@ -94,7 +106,10 @@ function limitCheckboxes(max) {
 function renderPowerCard(powerName) {
     const p = getPowerData(powerName);
     const statsLine = p.art ? `<div class="power-stats">Art: ${p.art} | Handlung: ${p.action} | Reichweite: ${p.range} | Dauer: ${p.duration}</div>` : "";
-    const formattedText = formatTextWithTooltips(p.text);
+    
+    // Prüfen, ob die Kraft eine dynamische getText-Funktion hat
+    const rawText = p.getText ? p.getText(powerName) : p.text;
+    const formattedText = formatTextWithTooltips(rawText);
 
     return `
         <div class="power-block">
