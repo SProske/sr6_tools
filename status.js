@@ -15,5 +15,11 @@ export const statusData = {
     "Brennend": "Lorem ipsum: Statuseffekt durch Feuerschaden.",
     "Verätzt": "Lorem ipsum: Statuseffekt durch Säure-/Chemieschaden.",
     "Unterkühlt": "Lorem ipsum: Statuseffekt durch Kälteschaden.",
-    "Verstrahlt": "Lorem ipsum: Statuseffekt durch Strahlungsschaden."
+    "Verstrahlt": "Lorem ipsum: Statuseffekt durch Strahlungsschaden.",
+    "Bewegungsunfähig": "Lorem ipsum: Das Ziel ist fixiert, kann keine Fortbewegungs-Handlungen ausführen und erleidet Abzüge.",
+    "Nass": "Lorem ipsum: Das Ziel ist klatschnass; macht es anfälliger für Elektrizität und Kälte.",
+    "Erschöpft": "Das Ziel leidet unter Ausdauerverlust. Die Stufe (I, II oder III) bestimmt den Würfelpoolabzug (-1, -2 oder -3).",
+    "Erschöpft I": "Das Ziel erleidet einen Abzug von -1 auf alle Proben.",
+    "Erschöpft II": "Das Ziel erleidet einen Abzug von -2 auf alle Proben.",
+    "Erschöpft III": "Das Ziel erleidet einen Abzug von -3 auf alle Proben."
 };
