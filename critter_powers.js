@@ -24,20 +24,23 @@ export const powerData = {
         range: "BF",
         duration: "Sofort",
         text: "Ein Critter mit dieser Kraft kann einen tödlichen Strahl elementarer Energie projizieren, der aus einem Flammenstoß, einem Eisspeer, einem Lichtblitz, einem glibbrigen Klumpen ätzender Substanz oder Ähnlichem bestehen kann. Die Kraft entspricht immer einem bestimmten Element: Elektrizität, Feuer, Chemie, Kälte oder Strahlung.<br>Der Critter legt eine Fernkampfangriffsprobe auf <em>Geschicklichkeit + Magie</em> ab. Der Angriff hat einen Schadenswert von (Magie)K (Schadensart), die Angriffswerte sind Magie × 2 / (Magie × 2) – 2 / (Magie × 2) – 8 / (Magie × 2) – 10 / –. Fällt der Angriffswert auf 0 oder weniger, kann der Elementare Angriff diese Reichweite nicht erreichen. Das Opfer gelangt in den Status, der der Angriffs- und damit Schadensart entspricht: {Gebrutzelt} (Elektrizität), {Brennend} (Feuer), {Verätzt} (Chemisch), {Unterkühlt} (Kälte) oder {Verstrahlt} (Strahlung).",
-        getAttack: (ks, powerName, attrs) => {
+        getGrantedAttack: (spirit, powerName) => {
             const elementMatch = powerName.match(/\(([^)]+)\)/);
             const element = elementMatch ? elementMatch[1] : "Elementar";
-            const statusName = ELEMENT_STATUS_MAP[element];
-            const statusText = statusName ? ` + {${statusName}}` : "";
+            const ks = spirit.ks;
+            const ges = spirit.attributes["GES"];
+            const mag = spirit.attributes["M"];
 
-            const ges = attrs?.["GES"] ?? ks;
-            const mag = attrs?.["M"] ?? ks;
-            const pool = ges + mag;
-
-            const rawAWs = [ks * 2, (ks * 2) - 2, (ks * 2) - 8, (ks * 2) - 10, 0];
-            const formattedAWs = rawAWs.map((val, index) => (index < 4 && val > 0) ? val : "-").join(" / ");
-
-            return `<strong>Elementarer Angriff (${element}):</strong> Schaden ${ks}K (${element})${statusText} | Probe: ${pool} (Geschicklichkeit + Magie) | AW ${formattedAWs}`;
+            return {
+                name: `Elementarer Angriff (${element})`,
+                damageValue: ks,
+                damageType: "K",
+                element: element,
+                status: ELEMENT_STATUS_MAP[element] || null,
+                poolValue: ges + mag,
+                poolDesc: "Geschicklichkeit + Magie",
+                rangeBands: [ks * 2, (ks * 2) - 2, (ks * 2) - 8, (ks * 2) - 10, 0]
+            };
         }
     },
     "Natürliche Waffe": {
@@ -46,7 +49,15 @@ export const powerData = {
         action: "Auto",
         range: "B",
         duration: "Sofort",
-        text: "Zähne, Klauen, ein stacheliger Schwanz – der Critter ist von der Natur mit einem Werkzeug ausgestattet worden, mit dem er anderen Körperlichen Schaden zufügen kann. Ein Critter verwendet die Fertigkeit <em>Nahkampf</em> für eine natürliche Nahkampfwaffe. Ein dualer Critter mit einer Natürlichen Nahkampfwaffe kann diese Kraft auch gegen astrale Ziele innerhalb seiner Reichweite einsetzen."
+        text: "Zähne, Klauen, ein stacheliger Schwanz – der Critter ist von der Natur mit einem Werkzeug ausgestattet worden, mit dem er anderen Körperlichen Schaden zufügen kann. Ein Critter verwendet die Fertigkeit <em>Nahkampf</em> für eine natürliche Nahkampfwaffe. Ein dualer Critter mit einer Natürlichen Nahkampfwaffe kann diese Kraft auch gegen astrale Ziele innerhalb seiner Reichweite einsetzen.",
+        modifyBaseAttack: (attack, spirit, powerName) => {
+            // Namen aus Klammern extrahieren (z. B. "Kralle/Biss")
+            const match = powerName ? powerName.match(/\(([^)]+)\)/) : null;
+            attack.name = match ? match[1] : "Natürliche Waffe";
+            
+            attack.damageType = "K";
+            attack.damageValue = Math.max(2, Math.floor(spirit.ks / 2) - 1);
+        }
     },
     "Energieaura": {
         shortDesc: "Hüllt den Critter in Energie; erhöht Nahkampfschaden und AW und fügt Angreifern Schaden zu.",
@@ -54,7 +65,19 @@ export const powerData = {
         action: "Auto",
         range: "Selbst",
         duration: "Immer",
-        text: "Der Critter ist von einem Feld zerstörerischer Energie umgeben, die die Form von Feuer, Kälte, Elektrizität, Strahlung oder einer ätzenden chemischen Substanz haben kann. Die Kraft bezieht sich immer auf ein bestimmtes Element.<br>Der Critter erhöht den Schadenswert jedes Nahkampfangriffs um sein halbes Magieattribut (aufgerundet). Die Schadensart versetzt das Opfer in den entsprechenden Status – {Gebrutzelt} (Elektrizität), {Brennend} (Feuer), {Verätzt} (Chemisch), {Unterkühlt} (Kälte) oder {Verstrahlt} (Strahlung) – und erhöht den Angriffswert um das Magieattribut des Critters.<br>Erfolgreiche waffenlose Nahkampfangriffe gegen einen Critter mit einer Energieaura fügen dem Angreifer ebenfalls Schaden in Höhe von (Magie)K + Status zu."
+        text: "Der Critter ist von einem Feld zerstörerischer Energie umgeben, die die Form von Feuer, Kälte, Elektrizität, Strahlung oder einer ätzenden chemischen Substanz haben kann. Die Kraft bezieht sich immer auf ein bestimmtes Element.<br>Der Critter erhöht den Schadenswert jedes Nahkampfangriffs um sein halbes Magieattribut (aufgerundet). Die Schadensart versetzt das Opfer in den entsprechenden Status – {Gebrutzelt} (Elektrizität), {Brennend} (Feuer), {Verätzt} (Chemisch), {Unterkühlt} (Kälte) oder {Verstrahlt} (Strahlung) – und erhöht den Angriffswert um das Magieattribut des Critters.<br>Erfolgreiche waffenlose Nahkampfangriffe gegen einen Critter mit einer Energieaura fügen dem Angreifer ebenfalls Schaden in Höhe von (Magie)K + Status zu.",
+        modifyBaseAttack: (attack, spirit, powerName) => {
+            const elementMatch = powerName.match(/\(([^)]+)\)/);
+            const element = elementMatch ? elementMatch[1] : "Energie";
+            const mag = spirit.attributes["M"];
+
+            attack.name += ` (${element})`;
+            attack.damageValue += Math.ceil(mag / 2);
+            attack.damageType = "K";
+            attack.element = element;
+            attack.status = ELEMENT_STATUS_MAP[element] || null;
+            attack.rangeBands[0] += mag;
+        }
     }
 };
 
