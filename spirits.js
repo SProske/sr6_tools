@@ -109,39 +109,48 @@ export class Spirit {
     }
 
     getSkills() {
-        const result = this.skills.map(name => ({ name, rating: this.ks }));
+        const active = [];
+        const knowledge = [];
 
-        // 1. Hauptfertigkeit (z. B. beim Helfergeist)
+        // 1. Basis-Fertigkeiten des Geistertyps
+        this.skills.forEach(name => {
+            active.push({ name, rating: this.ks, spec: null });
+        });
+
+        // 2. Hauptfertigkeit (z. B. beim Helfergeist)
         if (this.config.primarySkill) {
-            const specText = this.config.primarySpec ? ` (${this.config.primarySpec} +2)` : "";
-            result.push({ name: `${this.config.primarySkill}${specText}`, rating: this.ks });
+            active.push({
+                name: this.config.primarySkill,
+                rating: this.ks,
+                spec: this.config.primarySpec || null
+            });
 
             if (this.config.primaryKnowledge) {
-                result.push({ name: `[Wissen] ${this.config.primaryKnowledge}`, rating: this.ks });
+                knowledge.push(this.config.primaryKnowledge);
             }
         }
 
-        // 2. Alle in this.powers enthaltenen Fertigkeits-Kräfte scannen
+        // 3. Optionale Fertigkeiten aus Kraft-Karten
         this.powers.forEach(powerName => {
             const { baseName, param } = parsePowerString(powerName);
             
-            // Reagiert auf z. B. "Fertigkeit (Biotech)", ignoriert Komma-Listen
             if (baseName === "Fertigkeit" && param && !param.includes(',')) {
-                // Überspringen, falls es bereits die Hauptfertigkeit ist
                 if (param !== this.config.primarySkill) {
                     const optConfig = this.config.optionalSkillsConfigs?.[param] || {};
-                    const specText = optConfig.spec ? ` (${optConfig.spec} +2)` : "";
-
-                    result.push({ name: `${param}${specText}`, rating: this.ks });
+                    active.push({
+                        name: param,
+                        rating: this.ks,
+                        spec: optConfig.spec || null
+                    });
 
                     if (optConfig.knowledge) {
-                        result.push({ name: `[Wissen] ${optConfig.knowledge}`, rating: this.ks });
+                        knowledge.push(optConfig.knowledge);
                     }
                 }
             }
         });
 
-        return result;
+        return { active, knowledge };
     }
 }
 
