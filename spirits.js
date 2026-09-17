@@ -41,7 +41,26 @@ export class Spirit {
 
     static getOptionalPowersForType(typeKey) {
         const def = spiritDefinitions[typeKey];
-        return def ? def.optionalPowers : [];
+        if (!def || !def.optionalPowers) return [];
+
+        const expandedPowers = [];
+
+        def.optionalPowers.forEach(powerString => {
+            const { baseName, param } = parsePowerString(powerString);
+
+            // Wenn Parameter mit Kommas vorhanden sind (z. B. "Gesteigerte Sinne (Gehör, Geruch)")
+            // spalten wir diese in einzelne wählbare Optionen auf:
+            if (param && param.includes(',')) {
+                const options = param.split(',').map(p => p.trim());
+                options.forEach(opt => {
+                    expandedPowers.push(`${baseName} (${opt})`);
+                });
+            } else {
+                expandedPowers.push(powerString);
+            }
+        });
+
+        return expandedPowers;
     }
 
     getAttacks() {
