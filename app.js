@@ -128,7 +128,9 @@ function generateSpirit() {
     document.getElementById('vwMagisch').innerText = spirit.defense.magisch;
     document.getElementById('vwWeltlich').innerText = spirit.defense.weltlich;
 
-    document.getElementById('spiritSkills').innerText = spirit.skills.map(s => `${s} ${spirit.skillValue}`).join(', ');
+    document.getElementById('spiritSkills').innerText = spirit.getSkills()
+        .map(s => `${s.name} ${s.rating}`)
+        .join(', ');
 
     // Angriffe rendern
     const attacks = spirit.getAttacks();
