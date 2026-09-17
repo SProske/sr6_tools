@@ -4,7 +4,7 @@ import { getPowerData, parsePowerString } from './critter_powers.js';
 export class Spirit {
     static STANDARD_ATTRIBUTES = ["KON", "GES", "REA", "STR", "WIL", "LOG", "INT", "CHA", "M", "ESS"];
 
-    constructor(typeKey, ks, selectedOptionalPowers = []) {
+    constructor(typeKey, ks, selectedOptionalPowers = [], config = {}) {
         const def = spiritDefinitions[typeKey];
         if (!def) throw new Error(`Unbekannter Geistertyp: ${typeKey}`);
 
