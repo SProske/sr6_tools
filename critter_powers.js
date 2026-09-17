@@ -345,6 +345,27 @@ export const powerData = {
             const skill = param || "einer Fertigkeit";
             return `Der Critter besitzt eine frei wählbare Spezialisierung innerhalb der Fertigkeit <strong>${skill}</strong>. Proben, die unter diese Spezialisierung fallen, erhalten einen Bonus von +2 Würfeln.`;
         }
+    },
+    "Fertigkeit": {
+        shortDesc: "Gewährt eine Fertigkeit auf Kraftstufe-Wert inklusive Spezialisierung und Wissensfertigkeit.",
+        art: "P", action: "Auto", range: "Selbst", duration: "Immer",
+        
+        getText: (powerName, spirit) => {
+            const { param } = parsePowerString(powerName);
+            const ksValue = spirit ? spirit.ks : "KS";
+
+            if (!param) {
+                return `Der Geist erhält eine zusätzliche Fertigkeit auf einem Wert in Höhe seiner Kraftstufe (<strong>${ksValue}</strong>), eine dazu passende Spezialisierung (+2 Würfel) sowie eine passende Wissensfertigkeit.`;
+            }
+
+            // Wenn es sich um eine konkrete Einzelfertigkeit handelt (z. B. aus Zusatzkräften: "Fertigkeit (Biotech)")
+            if (!param.includes(',') && !param.includes('oder')) {
+                return `Der Geist erhält die Fertigkeit <strong>${param} ${ksValue}</strong>, eine dazu passende Spezialisierung (+2 Würfel) sowie eine passende Wissensfertigkeit.`;
+            }
+
+            // Wenn es die Auswahl-Liste aus der Hauptkraft ist
+            return `Der Geist wählt bei der Beschwörung eine Fertigkeit aus der Liste (<strong>${param}</strong>). Er erhält diese Fertigkeit auf einem Wert in Höhe seiner Kraftstufe (<strong>${ksValue}</strong>), eine dazu passende Spezialisierung (+2 Würfel) sowie eine passende Wissensfertigkeit.`;
+        }
     }
 };
 
