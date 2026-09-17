@@ -203,6 +203,45 @@ export const powerData = {
         range: "Selbst",
         duration: "Aufrechterhalten",
         text: "Ermöglicht dem astralen Wesen, über eine Haupthandlung eine physische Gestalt in der materiellen Welt anzunehmen. Solange der Geist materialisiert ist, existiert er gleichzeitig auf der physischen und der Astralebene (Dualwesen): Er kann mit physischen sowie astralen Wesen interagieren und von beiden angegriffen werden, nimmt beide Ebenen gleichzeitig ohne den sonst üblichen Abzug (-2) wahr und erhält Immunität gegen Normale Waffen. Das Entmaterialisieren zur Rückkehr auf die reine Astralebene erfordert eine Nebenhandlung."
+    },
+    "Bewegung": {
+        shortDesc: "Vervielfacht oder verringert die Bewegungsrate von Charakteren oder Fahrzeugen.",
+        art: "P", action: "H", range: "BF", duration: "Aufrechterhalten",
+        text: "Vervielfacht oder teilt die Bewegungsrate eines sich bewegenden Ziels um einen Faktor bis zu <em>Magie</em>. Unwillige Ziele widerstehen per Probe auf <em>Willenskraft + Magie</em> gegen <em>Willenskraft + Logik</em>; bei Erfolg erleidet das Ziel für [Nettoerfolge] Runden den Status {Humpelnd}. Gegen Fahrzeuge erfordert die Probe einen Schwellenwert von ⌈Rumpf / 2⌉ (min. 2); Nettoerfolge verändern die Geschwindigkeit/Beschleunigung."
+    },
+    "Bindung": {
+        shortDesc: "Fixiert Opfer per Sekret, Netz oder Magie an Flächen oder am Critter.",
+        art: "P", action: "H", range: "Verschieden", duration: "Sofort",
+        text: "Fixiert ein Opfer an Oberflächen oder am Critter. Bei Fernkampf (BF) Probe auf <em>Geschicklichkeit + Magie</em> gegen <em>Athletik + Reaktion</em>; bei Berührung (B) gegen <em>Nahkampf + Reaktion</em>. Bereits 1 Erfolg versetzt das Opfer in den Status {Bewegungsunfähig}. Befreiung erfordert eine Haupthandlung (Probe auf <em>Konstitution + Stärke</em> gegen <em>Willenskraft + Magie</em> des Critters). Bei Reichweite Selbst kann sich der Critter ohne Probe an Wänden oder Decken bewegen."
+    },
+    "Einfluss": {
+        shortDesc: "Projiziert Suggestionen in den Geist eines Ziels.",
+        art: "M", action: "H", range: "BF", duration: "Sofort",
+        text: "Projiziert eine Suggestion in den Geist des Opfers (Probe auf <em>Charisma + Magie</em> gegen <em>Willenskraft + Logik</em>). Bei Erfolg behandelt das Opfer den Gedanken als seinen eigenen. Offensichtlich lebensgefährliche Handlungen können nicht erzwungen werden; bei schädlichen Befehlen erhält das Opfer Proben zum Überwinden des Zwangs."
+    },
+    "Gift": {
+        shortDesc: "Sondert ein Injektions- oder Kontakttoxin ab.",
+        art: "P", action: "Auto", range: "B", duration: "Sofort",
+        text: "Der Critter sondert ein Toxin ab (Typisch: Vektor: Injektion; Geschwindigkeit: 1 KR; Kraft: <em>Magie</em>; Wirkung: {Benommen}, {Vergiftet} mit (Magie)K Schaden). Abweichende Vektoren (wie Kontakt) oder Effekte stehen in der Critterbeschreibung."
+    },
+    "Grauen": {
+        shortDesc: "Versetzt Opfer in schreckliche Panik und schlägt sie in die Flucht.",
+        art: "M", action: "H", range: "BF", duration: "Speziell",
+        text: "Erfüllt Opfer mit überwältigendem Entsetzen (Vergleichende Probe auf <em>Willenskraft + Magie</em> gegen <em>Willenskraft + Logik</em>). Bei Erfolg flieht das Opfer bedingungslos und erhält die Status {Panisch} und {Verängstigt}. Die Flucht hält 1 Kampfrunde pro Nettoerfolg an, die Statuseffekte halten doppelt so lange an. Danach erfordert eine erneute Annäherung eine Probe auf <em>Willenskraft + Logik</em> (Schwellenwert ⌈Magie / 2⌉)."
+    },
+    "Natürlicher Zauberspruch": {
+        shortDesc: "Ermöglicht das Wirken eines spezifischen Zauberspruchs.",
+        art: "Wie Zauber", action: "H", range: "Wie Zauber", duration: "Wie Zauber",
+        getText: (powerName) => {
+            const { param } = parsePowerString(powerName);
+            const zauberInfo = param ? ` (Zauber: <strong>${param}</strong>)` : "";
+            return `Erlaubt dem Critter das Wirken eines bestimmten Zauberspruchs${zauberInfo}. Wenn der Critter die Fertigkeit <em>Hexerei</em> nicht besitzt, würfelt er ohne Malus rein mit seinem <em>Magieattribut</em>. Verursacht normalen Entzug und unterliegt den Standardregeln für Antimagie und Aufrechterhalten (-2 Malus).`;
+        }
+    },
+    "Psychokinese": {
+        shortDesc: "Bewegt Objekte telekinetisch und führt damit Aktionen aus.",
+        art: "P", action: "N", range: "BF", duration: "Aufrechterhalten",
+        text: "Bewegt Objekte mittels Geisteskraft. Eine Probe auf <em>Willenskraft + Magie</em> bestimmt die effektive Stärke und Geschicklichkeit der unsichtbaren Hand (Höhe der erzielten Nettoerfolge). Objekte können 10 Meter pro Kampfrunde bewegt werden; Nah- oder Fernkampfangriffe sind mit passenden Fertigkeiten möglich."
     }
 };
 
