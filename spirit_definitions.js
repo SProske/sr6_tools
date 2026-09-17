@@ -111,7 +111,7 @@ export const spiritDefinitions = {
         skills: ["Astral", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewegung", "Bewusstsein", "Bindung", "Fertigkeit (Biotech, Elektronik, Mechanik, Natur oder Steuern + Spezi & Wissen)", "Materialisieren", "Suche", "Unfall"],
         weaknesses: [],
-        optionalPowers: ["Einfluss", "Fertigkeit (Zusatzwahl s. o.)", "Gesteigerte Sinne (Gehör, Geruchssinn, Infrarotsicht oder Restlichtverstärkung)", "Psychokinese", "Verschleierung"]
+        optionalPowers: ["Einfluss", "Fertigkeit (Zusatzwahl s. o.)", "Gesteigerte Sinne (Gehör, Geruch, Infrarotsicht, Restlichtverstärkung)", "Psychokinese", "Verschleierung"]
     },
     ratgeber: {
         name: "Ratgebergeist",
@@ -123,7 +123,7 @@ export const spiritDefinitions = {
         skills: ["Astral", "Hexerei", "Nahkampf", "Wahrnehmung"],
         powers: ["Astrale Gestalt", "Bewusstsein", "Magischer Schutz", "Materialisieren", "Schatten", "Schutz", "Suche", "Verwirrung", "Weissagung"],
         weaknesses: [],
-        optionalPowers: ["Einfluss", "Gesteigerte Sinne (Gehör, Geruchssinn, Infrarotsicht oder Restlichtverstärkung)", "Grauen", "Verschlingen"]
+        optionalPowers: ["Einfluss", "Gesteigerte Sinne (Gehör, Geruch, Infrarotsicht, Restlichtverstärkung)", "Grauen", "Verschlingen"]
     },
     nuklear: {
         name: "Nukleargeist",
