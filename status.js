@@ -28,5 +28,7 @@ export const statusData = {
     "Panisch": "Das Ziel flieht unter Kontrollverlust bedingungslos vor der Quelle des Schreckens und kann keine Angriffshandlungen ausführen.",
     "Verängstigt": "Das Ziel steht unter dem Eindruck schwerer Furcht und erleidet Abzüge auf Proben.",
     "Unsichtbar (Verbessert)": "Das Ziel ist magisch getarnt; Gegner müssen erst die Haupthandlung Genau beobachten aufwenden, um überhaupt eine Wahrnehmungsprobe ablegen zu dürfen.",
-    "Verwirrt": "Das Ziel erleidet einen Abzug auf alle Proben in Höhe der Stufe des Status."
+    "Verwirrt": "Das Ziel erleidet einen Abzug auf alle Proben in Höhe der Stufe des Status.",
+    "Unsichtbar": "Das Ziel ist visuell schwer oder gar nicht wahrnehmbar. Wahrnehmungsproben und Angriffe erleiden Abzüge je nach Stufe.",
+    "Geräuschlos": "Das Ziel erzeugt keine oder stark gedämpfte Geräusche. Akustische Wahrnehmungsproben gegen das Ziel erleiden einen Malus in Höhe der Stufe des Status."
 };
