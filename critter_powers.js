@@ -277,6 +277,35 @@ export const powerData = {
         shortDesc: "Manipuliert schrittweise das örtliche Wetter.",
         art: "P", action: "H", range: "BF", duration: "Aufrechterhalten",
         text: "Manipuliert die örtlichen Wetterbedingungen im Rahmen des natürlich Möglichen. Das Wetter verändert sich allmählich über eine Erweiterte Probe auf <em>Willenskraft + Magie</em> (Schwellenwert 10, Intervall: 30 Min.). Erlaubt das Heraufbeschwören von Wetterphänomenen (z. B. Gewitter), jedoch keine gezielte Steuerung einzelner Blitze."
+    },
+    "Magischer Schutz": {
+        shortDesc: "Erlaubt Zauberabwehr per Antimagie für den Geist und Verbündete.",
+        art: "M", action: "Speziell", range: "BF", duration: "Sofort",
+        text: "Ermöglicht den Einsatz von Antimagie zur Zauberabwehr gegen Zaubersprüche. Verfügt der Geist nicht über die Fertigkeit <em>Hexerei</em>, legt er die Zauberabwehrprobe stattdessen mit <em>Kraftstufe + Magie</em> ab."
+    },
+    "Schatten": {
+        shortDesc: "Hüllt den Geist in Dunkelheit, gewährt Edge und den Status Unsichtbar.",
+        art: "P", action: "N", range: "Speziell", duration: "Aufrechterhalten",
+        getText: (powerName, spirit) => {
+            const stufe = spirit ? Math.floor(spirit.ks / 2) : "KS ÷ 2";
+            const statusTag = typeof stufe === "number" && stufe > 0 ? `{Unsichtbar ${stufe}}` : "{Unsichtbar}";
+            return `Hüllt den Geist in Dunkelheit. In allen Lichtverhältnissen (außer hellem Tageslicht) erhält der Geist 1 Edge bei Aktionen rund um Kampf, Heimlichkeit oder soziale Interaktion. Bei schlechter Beleuchtung erhält der Geist zusätzlich den Status ${statusTag}.`;
+        }
+    },
+    "Stille": {
+        shortDesc: "Dämpft Geräusche in einer Sphäre und erzeugt den Status Geräuschlos.",
+        art: "P", action: "H", range: "Speziell", duration: "Aufrechterhalten",
+        getText: (powerName, spirit) => {
+            const mag = spirit ? (spirit.attributes["M"] || spirit.ks) : "Magie";
+            const stufe = spirit ? Math.floor(spirit.ks / 2) : "KS ÷ 2";
+            const statusTag = typeof stufe === "number" && stufe > 0 ? `{Geräuschlos ${stufe}}` : "{Geräuschlos}";
+            return `Umgibt den Geist mit einer Sphäre der Stille mit einem Radius von <em>${mag} Metern</em>. Alle hinein- und herausdringenden Geräusche werden gedämpft. Erzeugt den Status ${statusTag}.`;
+        }
+    },
+    "Weissagung": {
+        shortDesc: "Erlaubt Blicke in die Zukunft analog zur Metamagie Weissagung.",
+        art: "M", action: "Speziell", range: "Selbst", duration: "Speziell",
+        text: "Funktioniert wie die Metamagie <em>Weissagung</em>. Der Geist legt die Probe für den Blick in die Zukunft mit <em>Magie + Intuition</em> ab."
     }
 };
 
