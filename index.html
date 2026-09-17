@@ -4,87 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SR6 Geister-Generator</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 750px; margin: 20px auto; padding: 20px; background-color: #1a1a1a; color: #eee; }
-        .card { border: 1px solid #444; padding: 20px; border-radius: 8px; background-color: #2a2a2a; margin-top: 20px; }
-        .stat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 10px 0; }
-        .stat-box { background: #333; border: 1px solid #555; padding: 8px; text-align: center; border-radius: 4px; }
-        .stat-box span { font-size: 0.8em; color: #aaa; display: block; }
-        label { font-weight: bold; display: block; margin-top: 10px; }
-        input, select, button { padding: 8px; margin-top: 5px; width: 100%; box-sizing: border-box; background-color: #333; color: #fff; border: 1px solid #555; border-radius: 4px; }
-        button { background-color: #b22222; font-weight: bold; cursor: pointer; margin-top: 15px; }
-        button:hover { background-color: #d32f2f; }
-        
-        .checkbox-group { display: flex; flex-direction: column; gap: 8px; margin-top: 5px; background: #333; padding: 10px; border-radius: 4px; }
-        .checkbox-item { display: flex; align-items: flex-start; gap: 8px; }
-        .checkbox-item input { width: auto; margin-top: 3px; }
-        .opt-desc { font-size: 0.85em; color: #aaa; display: block; }
-
-        .section-title { border-bottom: 1px solid #555; padding-bottom: 4px; margin-top: 20px; color: #e57373; }
-        ul { padding-left: 20px; margin: 5px 0; }
-
-        /* Power Display Cards in Sheet */
-        .power-block { background: #222; border: 1px solid #444; border-left: 4px solid #e57373; padding: 10px; margin-bottom: 10px; border-radius: 4px; }
-        .power-header { font-weight: bold; color: #ff8a80; margin-bottom: 4px; }
-        .power-stats { font-size: 0.8em; color: #bbb; background: #333; padding: 2px 6px; border-radius: 3px; display: inline-block; margin-bottom: 6px; }
-        .power-text { font-size: 0.9em; line-height: 1.4; color: #ddd; }
-
-        /* Status Tooltip Styling */
-        .status-tooltip {
-            color: #ff8a80;
-            border-bottom: 1px dashed #ff8a80;
-            cursor: help;
-            position: relative;
-            display: inline-block;
-            font-weight: bold;
-        }
-
-        .status-tooltip .tooltip-text {
-            visibility: hidden;
-            width: 220px;
-            background-color: #111;
-            color: #fff;
-            text-align: left;
-            border-radius: 6px;
-            padding: 8px;
-            position: absolute;
-            z-index: 10;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 0.2s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.7);
-            font-size: 0.8em;
-            font-weight: normal;
-            border: 1px solid #e57373;
-            pointer-events: none;
-        }
-
-        .status-tooltip:hover .tooltip-text {
-            visibility: visible;
-            opacity: 1;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <h1>SR6 Geister-Generator</h1>
 
     <label for="geistertyp">Geistertyp:</label>
-    <select id="geistertyp" onchange="renderOptionalPowers()">
-        <!-- Wird automatisch durch JavaScript befüllt -->
+    <select id="geistertyp">
+        <!-- Wird dynamisch durch app.js befüllt -->
     </select>
 
     <label for="kraftstufe">Kraftstufe (KS):</label>
-    <input type="number" id="kraftstufe" min="1" max="12" value="4" oninput="renderOptionalPowers()">
+    <input type="number" id="kraftstufe" min="1" max="12" value="4">
 
     <div id="optionalPowersContainer">
         <label>Zusätzliche Kräfte (Auswählbar: <span id="maxOptionalCount">0</span>):</label>
         <div id="optionalPowersList" class="checkbox-group"></div>
     </div>
 
-    <button onclick="generateSpirit()">Geist generieren</button>
+    <button id="generateBtn">Geist generieren</button>
 
     <div id="output" class="card" style="display: none;">
         <h2 id="spiritName" style="color: #ff5252; margin-top: 0;"></h2>
@@ -118,216 +57,7 @@
         <p id="spiritWeaknesses"></p>
     </div>
 
-    <!-- Skripte in korrekter Reihenfolge laden -->
-    <script src="spirits.js"></script>
-    <script src="powers.js"></script>
-    <script>
-        function getPowerData(powerName) {
-            if (powerData[powerName]) return powerData[powerName];
-            // Falls Name Klammern enthält (z.B. "Elementarer Angriff (Feuer)"), nach Basisnamen suchen
-            const baseName = powerName.split('(')[0].trim();
-            if (powerData[baseName]) return powerData[baseName];
-            return { shortDesc: "Keine Kurzbeschreibung verfügbar.", text: "Keine Regeldetails hinterlegt." };
-        }
-        
-        function populateSpiritDropdown() {
-            const select = document.getElementById('geistertyp');
-            select.innerHTML = '';
-        
-            for (const [key, data] of Object.entries(spiritData)) {
-                const option = document.createElement('option');
-                option.value = key;
-                option.textContent = data.name;
-                select.appendChild(option);
-            }
-        }
-
-        function generateMeleeAttack(ks, typ, attrs, allPowers) {
-            const ges = attrs["GES"] || ks;
-            const rea = attrs["REA"] || ks;
-            const str = attrs["STR"] || ks;
-            const mag = attrs["M"] || ks;
-            const nahkampf = ks; // Fertigkeit entspricht immer der Kraftstufe
-        
-            const pool = nahkampf + ges;
-            let baseAW = rea + str;
-            let name = "Waffenloser Angriff";
-            let dmgType = "B";
-            let dmgVal = 2;
-        
-            // 1. Schadensberechnung Basis
-            if (typ === "mensch") {
-                dmgVal = Math.max(2, Math.floor(ks / 2) - 1);
-            }
-        
-            // 2. Modifikation durch "Natürliche Waffe"
-            const hasNatWaffe = allPowers.some(p => p.startsWith("Natürliche Waffe"));
-            if (hasNatWaffe) {
-                name = "Natürliche Waffe";
-                dmgType = "K";
-                dmgVal = Math.max(2, Math.floor(ks / 2) - 1);
-            }
-        
-            // 3. Modifikation durch "Energieaura"
-            const auraPower = allPowers.find(p => p.startsWith("Energieaura"));
-            let statusText = "";
-            if (auraPower) {
-                const elementMatch = auraPower.match(/\(([^)]+)\)/);
-                const element = elementMatch ? elementMatch[1] : "Energie";
-        
-                if (element.includes("Feuer")) statusText = " + {Brennend}";
-                else if (element.includes("Elektrizität")) statusText = " + {Gebrutzelt}";
-                else if (element.includes("Chemisch")) statusText = " + {Verätzt}";
-                else if (element.includes("Kälte")) statusText = " + {Unterkühlt}";
-                else if (element.includes("Strahlung")) statusText = " + {Verstrahlt}";
-        
-                dmgVal += Math.ceil(mag / 2);
-                baseAW += mag;
-                dmgType = `K (${element})`;
-                name += ` (${element})`;
-            }
-        
-            const awFormatted = `${baseAW} / - / - / - / -`;
-            const formattedText = formatTextWithTooltips(`<strong>${name}:</strong> Schaden ${dmgVal}${dmgType}${statusText} | Probe: ${pool} (Nahkampf + Geschicklichkeit) | AW ${awFormatted}`);
-            
-            return `<li>${formattedText}</li>`;
-        }
-
-        function renderOptionalPowers() {
-            const ks = parseInt(document.getElementById('kraftstufe').value) || 1;
-            const typ = document.getElementById('geistertyp').value;
-            const data = spiritData[typ];
-            
-            const maxAllowed = Math.floor(ks / 3);
-            document.getElementById('maxOptionalCount').innerText = maxAllowed;
-        
-            const listContainer = document.getElementById('optionalPowersList');
-            listContainer.innerHTML = '';
-        
-            if (maxAllowed === 0) {
-                listContainer.innerHTML = '<em>Keine Zusatzkräfte bei dieser Kraftstufe möglich.</em>';
-                return;
-            }
-        
-            data.optionalPowers.forEach(powerName => {
-                // getPowerData löst auch Varianten mit Klammern wie "(Chemisch)" sauber auf
-                const info = getPowerData(powerName);
-                listContainer.innerHTML += `
-                    <div class="checkbox-item">
-                        <input type="checkbox" class="opt-power-cb" value="${powerName}" onchange="limitCheckboxes(${maxAllowed})">
-                        <div>
-                            <strong>${powerName}</strong>
-                            <span class="opt-desc">${info.shortDesc}</span>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function limitCheckboxes(max) {
-            const checkboxes = document.querySelectorAll('.opt-power-cb');
-            const checkedCount = document.querySelectorAll('.opt-power-cb:checked').length;
-
-            checkboxes.forEach(cb => {
-                if (!cb.checked) {
-                    cb.disabled = checkedCount >= max;
-                }
-            });
-        }
-
-        // Hilfsfunktion: Wandelt {Statusname} im Text in Tooltip-HTML um
-        function formatTextWithTooltips(rawText) {
-            if (!rawText) return "";
-            return rawText.replace(/\{([^}]+)\}/g, (match, statusName) => {
-                const tooltipInfo = statusData[statusName] || "Keine Beschreibung verfügbar.";
-                return `<span class="status-tooltip">${statusName}<span class="tooltip-text">${tooltipInfo}</span></span>`;
-            });
-        }
-
-        function renderPowerCard(powerName) {
-            // getPowerData löst auch Varianten wie "Elementarer Angriff (Feuer)" korrekt auf
-            const p = getPowerData(powerName);
-            
-            let statsLine = "";
-            if (p.art) {
-                statsLine = `<div class="power-stats">Art: ${p.art} | Handlung: ${p.action} | Reichweite: ${p.range} | Dauer: ${p.duration}</div>`;
-            }
-        
-            const formattedText = formatTextWithTooltips(p.text);
-        
-            return `
-                <div class="power-block">
-                    <div class="power-header">${powerName}</div>
-                    ${statsLine}
-                    <div class="power-text">${formattedText}</div>
-                </div>
-            `;
-        }
-
-        function generateSpirit() {
-            const ks = parseInt(document.getElementById('kraftstufe').value) || 1;
-            const typ = document.getElementById('geistertyp').value;
-            const data = spiritData[typ];
-
-            // Basisdaten & Attribute
-            document.getElementById('spiritName').innerText = `${data.name} (Kraftstufe ${ks})`;
-            const attrs = data.attributes(ks);
-            const grid = document.getElementById('attributeGrid');
-            grid.innerHTML = '';
-            for (const [key, val] of Object.entries(attrs)) {
-                grid.innerHTML += `<div class="stat-box"><span>${key}</span><strong>${val}</strong></div>`;
-            }
-
-            // Kampfwerte
-            document.getElementById('spiritInit').innerText = data.init(ks);
-            document.getElementById('spiritAstralInit').innerText = data.astralInit(ks);
-            document.getElementById('spiritHealth').innerText = data.health(ks);
-            // Bewegung dynamisch setzen
-            document.getElementById('spiritMovement').innerText = data.movement;
-            
-            const def = data.defense(ks);
-            document.getElementById('vwAstral').innerText = def.astral;
-            document.getElementById('vwMagisch').innerText = def.magisch;
-            document.getElementById('vwWeltlich').innerText = def.weltlich;
-
-             // Kräfte (Basis + Zusatzkräfte kombiniert als Detail-Karten ausgeben)
-            const selectedExtras = Array.from(document.querySelectorAll('.opt-power-cb:checked')).map(cb => cb.value);
-            const allPowers = [...data.powers, ...selectedExtras];
-
-            // Fertigkeiten & Angriffe
-            document.getElementById('spiritSkills').innerText = data.skills.map(s => `${s} ${ks}`).join(', ');
-
-            // Angriffe generieren
-            const attackList = document.getElementById('spiritAttacks');
-            attackList.innerHTML = '';
-
-            // 1. Automatischer Nahkampfangriff für JEDEN Geist
-            attackList.innerHTML += generateMeleeAttack(ks, typ, attrs, allPowers);
-
-            // 2. Fernkampf- & Spezialangriffe aus Kräften (z. B. Elementarer Angriff)
-            allPowers.forEach(powerName => {
-                const pInfo = getPowerData(powerName);
-                if (pInfo && pInfo.getAttack) {
-                    const formattedAttack = formatTextWithTooltips(pInfo.getAttack(ks, powerName, attrs));
-                    attackList.innerHTML += `<li>${formattedAttack}</li>`;
-                }
-            });
-
-            const powersContainer = document.getElementById('spiritPowersList');
-            powersContainer.innerHTML = '';
-            allPowers.forEach(powerName => {
-                powersContainer.innerHTML += renderPowerCard(powerName);
-            });
-
-            // Schwächen
-            document.getElementById('spiritWeaknesses').innerText = data.weaknesses.join(', ');
-
-            document.getElementById('output').style.display = 'block';
-        }
-
-        // Initiales Rendering
-        populateSpiritDropdown();
-        renderOptionalPowers();
-    </script>
+    <!-- Modulbasiertes Hauptskript laden -->
+    <script type="module" src="app.js"></script>
 </body>
 </html>
