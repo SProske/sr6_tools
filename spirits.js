@@ -12,7 +12,7 @@ export class Spirit {
         this.ks = Math.min(12, Math.max(1, parseInt(ks) || 1));
         this.name = def.name;
         this.movement = def.movement || { walk: 5, run: 10, sprintBonus: 1 };
-        this.skills = def.skills;
+        this.skills = [...def.skills];
         this.weaknesses = def.weaknesses;
 
         this.attributes = this.calculateAttributes(def.attrMods || {});
@@ -20,10 +20,12 @@ export class Spirit {
         this.init = def.init ? def.init(ks) : SpiritCalculations.init(ks);
         this.astralInit = def.astralInit ? def.astralInit(ks) : SpiritCalculations.astralInit(ks);
 
+        this.config = config;
+
         const maxExtras = Spirit.getMaxOptionalPowers(this.ks);
         const validExtras = selectedOptionalPowers.slice(0, maxExtras);
 
-        this.powers = [...def.powers, ...selectedOptionalPowers];
+        this.powers = [...def.powers, ...validExtras];
     }
 
     calculateAttributes(mods) {
@@ -53,6 +55,7 @@ export class Spirit {
             if (param && param.includes(',')) {
                 const options = param.split(',').map(p => p.trim());
                 options.forEach(opt => {
+                    if (baseName === "Fertigkeit" && opt === excludedSkill) return;
                     expandedPowers.push(`${baseName} (${opt})`);
                 });
             } else {
@@ -106,10 +109,27 @@ export class Spirit {
     }
 
     getSkills() {
-        return this.skills.map(skillName => ({
-            name: skillName,
-            rating: this.ks
-        }));
+        const result = this.skills.map(name => ({ name, rating: this.ks }));
+
+        // Primary Skill aus Hauptkraft ergänzen
+        if (this.config.primarySkill) {
+            const specText = this.config.spec ? ` (${this.config.spec} +2)` : "";
+            result.push({ name: `${this.config.primarySkill}${specText}`, rating: this.ks });
+        }
+
+        // Wissen/Spezialisierung als eigene Notiz oder Wissensfertigkeit
+        if (this.config.knowledge) {
+            result.push({ name: `[Wissen] ${this.config.knowledge}`, rating: this.ks });
+        }
+
+        // Eventuell gewählte Zusatzfertigkeiten aus optionalen Kräften ergänzen
+        if (this.config.optionalSkills) {
+            this.config.optionalSkills.forEach(sk => {
+                result.push({ name: sk, rating: this.ks });
+            });
+        }
+
+        return result;
     }
 }
 
