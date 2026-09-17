@@ -1,5 +1,6 @@
 import { spiritData } from './spirits.js';
-import { powerData, statusData, ELEMENT_STATUS_MAP, getPowerData } from './powers.js';
+import { powerData, getPowerData } from './critter_powers.js';
+import { statusData, ELEMENT_STATUS_MAP } from './status.js'
 
 function formatTextWithTooltips(rawText) {
     if (!rawText) return "";
