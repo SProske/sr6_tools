@@ -1,5 +1,12 @@
 import { ELEMENT_STATUS_MAP } from './status.js';
 
+const SENSE_MECHANICS = {
+    "Gehör": "<strong>Gehör:</strong> +1 Würfelpoolbonus auf alle Wahrnehmungsproben zum Hören.",
+    "Geruch": "<strong>Geruch:</strong> Gewährt 1 Edge bei allen Wahrnehmungsproben basierend auf Geruch.",
+    "Infrarotsicht": "<strong>Infrarotsicht:</strong> Sehen im Infrarotspektrum (Hitzemuster). Gewährt 1 Edge in schwachem Licht oder absoluter Dunkelheit, sofern die Gegenseite keine entsprechende Sichtverstärkung besitzt.",
+    "Restlichtverstärkung": "<strong>Restlichtverstärkung:</strong> Normales Sehen bei schwachem Licht (z. B. Sternenlicht). Gewährt 1 Edge bei schwachem Licht, sofern die Gegenseite keine entsprechende Sichtverstärkung besitzt."
+};
+
 export function parsePowerString(powerName) {
     const match = powerName.match(/^([^(]+)(?:\(([^)]+)\))?/);
     return {
@@ -306,6 +313,28 @@ export const powerData = {
         shortDesc: "Erlaubt Blicke in die Zukunft analog zur Metamagie Weissagung.",
         art: "M", action: "Speziell", range: "Selbst", duration: "Speziell",
         text: "Funktioniert wie die Metamagie <em>Weissagung</em>. Der Geist legt die Probe für den Blick in die Zukunft mit <em>Magie + Intuition</em> ab."
+    },
+    "Gesteigerte Sinne": {
+        shortDesc: "Schärft die Wahrnehmung um spezielle optische, akustische oder olfaktorische Sinne.",
+        art: "P", action: "Auto", range: "Selbst", duration: "Immer",
+        
+        getText: (powerName) => {
+            const { param } = parsePowerString(powerName);
+            const baseIntro = "Erweitert die Wahrnehmungsbandbreite des Critters über normale metamenschliche Grenzen hinaus.";
+
+            if (!param) return baseIntro;
+
+            const activeRules = param.split(',')
+                .map(sense => sense.trim())
+                .map(sense => SENSE_MECHANICS[sense])
+                .filter(Boolean);
+
+            if (activeRules.length > 0) {
+                return `${baseIntro}<br><br><strong>Aktive Sinne &amp; Regelauswirkungen:</strong><br>• ${activeRules.join('<br>• ')}`;
+            }
+
+            return `${baseIntro} (${param})`;
+        }
     }
 };
 
