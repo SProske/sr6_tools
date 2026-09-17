@@ -335,6 +335,16 @@ export const powerData = {
 
             return `${baseIntro} (${param})`;
         }
+    },
+    "Fertigkeitsspezialisierung": {
+        shortDesc: "Gewährt +2 Würfel auf Proben einer gewählten Spezialisierung.",
+        art: "P", action: "Auto", range: "Selbst", duration: "Immer",
+        
+        getText: (powerName) => {
+            const { param } = parsePowerString(powerName);
+            const skill = param || "einer Fertigkeit";
+            return `Der Critter besitzt eine frei wählbare Spezialisierung innerhalb der Fertigkeit <strong>${skill}</strong>. Proben, die unter diese Spezialisierung fallen, erhalten einen Bonus von +2 Würfeln.`;
+        }
     }
 };
 
