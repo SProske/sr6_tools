@@ -1,6 +1,6 @@
 import { Spirit, spiritDefinitions } from './spirits.js';
 import { getPowerData } from './critter_powers.js';
-import { statusData, ELEMENT_STATUS_MAP } from './status.js';
+import { statusData } from './status.js';
 
 function formatMovement(movement) {
     if (!movement) return "-";
@@ -17,7 +17,6 @@ function formatAttack(attack) {
     }
 
     if (attack.status) {
-        // Wandelt "Brennend, Bewegungsunfähig" sauber in "+ {Brennend} + {Bewegungsunfähig}" um
         const statusFormatted = attack.status.split(', ')
             .map(s => `{${s.trim()}}`)
             .join(' + ');
@@ -36,10 +35,8 @@ function formatAttack(attack) {
 function formatTextWithTooltips(rawText) {
     if (!rawText) return "";
     return rawText.replace(/\{([^}]+)\}/g, (match, statusName) => {
-        // 1. Prüfen auf exakten Treffer (z. B. "Erschöpft I")
         let tooltipInfo = statusData[statusName];
         
-        // 2. Fallback: Zahlen/Römische Ziffern entfernen (z. B. "Verwirrt 3" -> "Verwirrt")
         if (!tooltipInfo) {
             const baseName = statusName.replace(/\s+(I|II|III|IV|V|\d+)$/i, '').trim();
             tooltipInfo = statusData[baseName] || "Keine Beschreibung verfügbar.";
@@ -60,10 +57,8 @@ function renderOptionalPowers() {
     const ks = parseInt(document.getElementById('kraftstufe').value) || 1;
     const typ = document.getElementById('geistertyp').value;
 
-    // Gewählte Hauptfertigkeit abfragen (falls vorhanden)
     const selectedSkill = document.getElementById('primarySkillSelect')?.value || null;
     
-    // Neu: Beide Werten direkt von der Spirit-Klasse abfragen
     const maxAllowed = Spirit.getMaxOptionalPowers(ks);
     const optionalPowers = Spirit.getOptionalPowersForType(typ, selectedSkill);
 
@@ -76,7 +71,6 @@ function renderOptionalPowers() {
         return;
     }
 
-    // Neu: optionalPowers (Array) statt data.optionalPowers
     listContainer.innerHTML = optionalPowers.map(powerName => {
         const info = getPowerData(powerName);
         return `
@@ -110,7 +104,6 @@ function renderPowerCard(powerName, spirit) {
     const p = getPowerData(powerName);
     const statsLine = p.art ? `<div class="power-stats">Art: ${p.art} | Handlung: ${p.action} | Reichweite: ${p.range} | Dauer: ${p.duration}</div>` : "";
     
-    // Pass spirit parameter to getText if available
     const rawText = p.getText ? p.getText(powerName, spirit) : p.text;
     const formattedText = formatTextWithTooltips(rawText);
 
@@ -123,13 +116,50 @@ function renderPowerCard(powerName, spirit) {
     `;
 }
 
+function handleGeistertypChange() {
+    const typ = document.getElementById('geistertyp').value;
+    const configContainer = document.getElementById('primaryPowerConfig');
+
+    if (configContainer) {
+        if (typ === 'helfer') {
+            configContainer.innerHTML = `
+                <div class="helfer-config-box">
+                    <label>Haupt-Fertigkeit wählen:</label>
+                    <select id="primarySkillSelect">
+                        <option value="Biotech">Biotech</option>
+                        <option value="Elektronik">Elektronik</option>
+                        <option value="Mechanik">Mechanik</option>
+                        <option value="Natur">Natur</option>
+                        <option value="Steuern">Steuern</option>
+                    </select>
+                    <input type="text" id="primarySpecInput" placeholder="Spezialisierung (optional)">
+                    <input type="text" id="primaryKnowledgeInput" placeholder="Wissensfertigkeit (optional)">
+                </div>
+            `;
+            
+            document.getElementById('primarySkillSelect')?.addEventListener('change', renderOptionalPowers);
+        } else {
+            configContainer.innerHTML = '';
+        }
+    }
+
+    renderOptionalPowers();
+}
+
 function generateSpirit() {
     const ks = parseInt(document.getElementById('kraftstufe').value) || 1;
     const typ = document.getElementById('geistertyp').value;
     const selectedExtras = Array.from(document.querySelectorAll('.opt-power-cb:checked')).map(cb => cb.value);
 
-    // Geist-Instanz erzeugen
-    const spirit = new Spirit(typ, ks, selectedExtras);
+    // Config-Eingaben für Helfergeist einsammeln
+    const config = {
+        primarySkill: document.getElementById('primarySkillSelect')?.value || null,
+        spec: document.getElementById('primarySpecInput')?.value?.trim() || '',
+        knowledge: document.getElementById('primaryKnowledgeInput')?.value?.trim() || ''
+    };
+
+    // Geist-Instanz mit Config erzeugen
+    const spirit = new Spirit(typ, ks, selectedExtras, config);
 
     document.getElementById('spiritName').innerText = `${spirit.name} (Kraftstufe ${spirit.ks})`;
     
@@ -150,56 +180,25 @@ function generateSpirit() {
         .map(s => `${s.name} ${s.rating}`)
         .join(', ');
 
-    // Angriffe rendern
     const attacks = spirit.getAttacks();
     document.getElementById('spiritAttacks').innerHTML = attacks
         .map(atk => `<li>${formatAttack(atk)}</li>`)
         .join('');
 
-    // Kräftekarten rendern
     document.getElementById('spiritPowersList').innerHTML = spirit.powers
-    .map(pName => renderPowerCard(pName, spirit))
-    .join('');
+        .map(pName => renderPowerCard(pName, spirit))
+        .join('');
 
     document.getElementById('spiritWeaknesses').innerText = spirit.weaknesses.length > 0 ? spirit.weaknesses.join(', ') : 'Keine';
     document.getElementById('output').style.display = 'block';
 }
 
-document.getElementById('geistertyp').addEventListener('change', (e) => {
-    const typ = e.target.value;
-    const configContainer = document.getElementById('primaryPowerConfig');
-
-    if (typ === 'helfer') {
-        configContainer.innerHTML = `
-            <div class="helfer-config-box">
-                <label>Haupt-Fertigkeit wählen:</label>
-                <select id="primarySkillSelect">
-                    <option value="Biotech">Biotech</option>
-                    <option value="Elektronik">Elektronik</option>
-                    <option value="Mechanik">Mechanik</option>
-                    <option value="Natur">Natur</option>
-                    <option value="Steuern">Steuern</option>
-                </select>
-                <input type="text" id="primarySpecInput" placeholder="Spezialisierung (optional)">
-                <input type="text" id="primaryKnowledgeInput" placeholder="Wissensfertigkeit (optional)">
-            </div>
-        `;
-        
-        // Bei Änderung der Fertigkeit optionale Kräfte neu rendern (schließt gewählte aus)
-        document.getElementById('primarySkillSelect').addEventListener('change', renderOptionalPowers);
-    } else {
-        configContainer.innerHTML = '';
-    }
-
-    renderOptionalPowers();
-});
-
 // Globales Setup nach DOM-Ready
 document.addEventListener('DOMContentLoaded', () => {
     populateSpiritDropdown();
-    renderOptionalPowers();
+    handleGeistertypChange();
 
-    document.getElementById('geistertyp').addEventListener('change', renderOptionalPowers);
+    document.getElementById('geistertyp').addEventListener('change', handleGeistertypChange);
     document.getElementById('kraftstufe').addEventListener('input', renderOptionalPowers);
     document.getElementById('generateBtn').addEventListener('click', generateSpirit);
 });
