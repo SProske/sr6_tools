@@ -59,10 +59,13 @@ function populateSpiritDropdown() {
 function renderOptionalPowers() {
     const ks = parseInt(document.getElementById('kraftstufe').value) || 1;
     const typ = document.getElementById('geistertyp').value;
+
+    // Gewählte Hauptfertigkeit abfragen (falls vorhanden)
+    const selectedSkill = document.getElementById('primarySkillSelect')?.value || null;
     
     // Neu: Beide Werten direkt von der Spirit-Klasse abfragen
     const maxAllowed = Spirit.getMaxOptionalPowers(ks);
-    const optionalPowers = Spirit.getOptionalPowersForType(typ);
+    const optionalPowers = Spirit.getOptionalPowersForType(typ, selectedSkill);
 
     document.getElementById('maxOptionalCount').innerText = maxAllowed;
 
@@ -161,6 +164,35 @@ function generateSpirit() {
     document.getElementById('spiritWeaknesses').innerText = spirit.weaknesses.length > 0 ? spirit.weaknesses.join(', ') : 'Keine';
     document.getElementById('output').style.display = 'block';
 }
+
+document.getElementById('geistertyp').addEventListener('change', (e) => {
+    const typ = e.target.value;
+    const configContainer = document.getElementById('primaryPowerConfig');
+
+    if (typ === 'helfer') {
+        configContainer.innerHTML = `
+            <div class="helfer-config-box">
+                <label>Haupt-Fertigkeit wählen:</label>
+                <select id="primarySkillSelect">
+                    <option value="Biotech">Biotech</option>
+                    <option value="Elektronik">Elektronik</option>
+                    <option value="Mechanik">Mechanik</option>
+                    <option value="Natur">Natur</option>
+                    <option value="Steuern">Steuern</option>
+                </select>
+                <input type="text" id="primarySpecInput" placeholder="Spezialisierung (optional)">
+                <input type="text" id="primaryKnowledgeInput" placeholder="Wissensfertigkeit (optional)">
+            </div>
+        `;
+        
+        // Bei Änderung der Fertigkeit optionale Kräfte neu rendern (schließt gewählte aus)
+        document.getElementById('primarySkillSelect').addEventListener('change', renderOptionalPowers);
+    } else {
+        configContainer.innerHTML = '';
+    }
+
+    renderOptionalPowers();
+});
 
 // Globales Setup nach DOM-Ready
 document.addEventListener('DOMContentLoaded', () => {
