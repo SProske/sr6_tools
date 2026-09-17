@@ -21,5 +21,6 @@ export const statusData = {
     "Erschöpft": "Das Ziel leidet unter Ausdauerverlust. Die Stufe (I, II oder III) bestimmt den Würfelpoolabzug (-1, -2 oder -3).",
     "Erschöpft I": "Das Ziel erleidet einen Abzug von -1 auf alle Proben.",
     "Erschöpft II": "Das Ziel erleidet einen Abzug von -2 auf alle Proben.",
-    "Erschöpft III": "Das Ziel erleidet einen Abzug von -3 auf alle Proben."
+    "Erschöpft III": "Das Ziel erleidet einen Abzug von -3 auf alle Proben.",
+    "Übelkeit": "Lorem ipsum: Das Ziel erleidet schwere Übelkeit, Handlungen sind stark eingeschränkt."
 };
