@@ -212,10 +212,19 @@ function generateSpirit() {
     document.getElementById('vwMagisch').innerText = spirit.defense.magisch;
     document.getElementById('vwWeltlich').innerText = spirit.defense.weltlich;
 
-    // Gerenderte Fertigkeitenliste inklusive Haupt- und Zusatzfertigkeiten!
-    document.getElementById('spiritSkills').innerText = spirit.getSkills()
-        .map(s => `${s.name} ${s.rating}`)
+    const { active, knowledge } = spirit.getSkills();
+
+    const formattedActive = active
+        .map(s => `${s.name} ${s.rating}${s.spec ? ` (${s.spec} +2)` : ''}`)
         .join(', ');
+
+    let skillsHTML = `<strong>Aktionsfertigkeiten:</strong> ${formattedActive}`;
+    
+    if (knowledge.length > 0) {
+        skillsHTML += `<br><strong>Wissensfertigkeiten:</strong> ${knowledge.join(', ')}`;
+    }
+
+    document.getElementById('spiritSkills').innerHTML = skillsHTML;
 
     const attacks = spirit.getAttacks();
     document.getElementById('spiritAttacks').innerHTML = attacks
