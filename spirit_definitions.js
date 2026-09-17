@@ -132,8 +132,8 @@ export const spiritDefinitions = {
         init: (ks) => SpiritCalculations.init(ks, 4),
         astralInit: (ks) => SpiritCalculations.astralInit(ks, 1),
         defense: (ks) => ({ astral: ks + 1, magisch: ks + 1, weltlich: (ks * 2) + 1 }),
-        skills: ["Astral", "Athletik", "Exotische Waffen", "Nahkampf", "Wahrnehmung"],
-        powers: ["Astrale Gestalt", "Bewusstsein", "Elementarer Angriff (Strahlung)", "Energieaura (Strahlung)", "Hexerei", "Materialisieren", "Unfall", "Verschlingen (Strahlung)", "Verwirrung"],
+        skills: ["Astral", "Athletik", "Exotische Waffen", "Hexerei", "Nahkampf", "Wahrnehmung"],
+        powers: ["Astrale Gestalt", "Bewusstsein", "Elementarer Angriff (Strahlung)", "Energieaura (Strahlung)", "Materialisieren", "Unfall", "Verschlingen (Strahlung)", "Verwirrung"],
         weaknesses: ["Allergie (Blei/Jod, Schwer)", "Verwundbarkeit (Feuerlöscher)"],
         optionalPowers: ["Gifthauch", "Grauen", "Natürlicher Zauberspruch (Strahlenblitz, Strahlenexplosion)", "Schutz", "Suche"]
     }
