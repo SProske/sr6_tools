@@ -26,5 +26,7 @@ export const statusData = {
     "Humpelnd": "Das Ziel leidet unter stark eingeschränkter Fortbewegung; Laufen und Sprinten sind erschwert und die Bewegungsrate ist deutlich reduziert.",
     "Vergiftet": "Das Ziel steht unter dem Einfluss eines Toxins und erleidet periodischen Schaden oder Eigenschaftsabzüge.",
     "Panisch": "Das Ziel flieht unter Kontrollverlust bedingungslos vor der Quelle des Schreckens und kann keine Angriffshandlungen ausführen.",
-    "Verängstigt": "Das Ziel steht unter dem Eindruck schwerer Furcht und erleidet Abzüge auf Proben."
+    "Verängstigt": "Das Ziel steht unter dem Eindruck schwerer Furcht und erleidet Abzüge auf Proben.",
+    "Unsichtbar (Verbessert)": "Das Ziel ist magisch getarnt; Gegner müssen erst die Haupthandlung Genau beobachten aufwenden, um überhaupt eine Wahrnehmungsprobe ablegen zu dürfen.",
+    "Verwirrt": "Das Ziel erleidet einen Abzug auf alle Proben in Höhe der Stufe des Status."
 };
