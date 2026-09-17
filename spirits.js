@@ -32,6 +32,15 @@ export class Spirit {
         return attrs;
     }
 
+    static getMaxOptionalPowers(ks) {
+        return Math.floor(ks / 3);
+    }
+
+    static getOptionalPowersForType(typeKey) {
+        const def = spiritDefinitions[typeKey];
+        return def ? def.optionalPowers : [];
+    }
+
     getAttacks() {
         const attacks = [];
         const rea = this.attributes["REA"];
