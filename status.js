@@ -22,5 +22,6 @@ export const statusData = {
     "Erschöpft I": "Das Ziel erleidet einen Abzug von -1 auf alle Proben.",
     "Erschöpft II": "Das Ziel erleidet einen Abzug von -2 auf alle Proben.",
     "Erschöpft III": "Das Ziel erleidet einen Abzug von -3 auf alle Proben.",
-    "Übelkeit": "Lorem ipsum: Das Ziel erleidet schwere Übelkeit, Handlungen sind stark eingeschränkt."
+    "Übelkeit": "Lorem ipsum: Das Ziel erleidet schwere Übelkeit, Handlungen sind stark eingeschränkt.",
+    "Humpelnd": "Das Ziel leidet unter stark eingeschränkter Fortbewegung; Laufen und Sprinten sind erschwert und die Bewegungsrate ist deutlich reduziert."
 };
