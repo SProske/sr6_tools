@@ -9,7 +9,7 @@ export class Spirit {
         if (!def) throw new Error(`Unbekannter Geistertyp: ${typeKey}`);
 
         this.typeKey = typeKey;
-        this.ks = ks;
+        this.ks = Math.min(12, Math.max(1, parseInt(ks) || 1));
         this.name = def.name;
         this.movement = def.movement || { walk: 5, run: 10, sprintBonus: 1 };
         this.skills = def.skills;
@@ -19,6 +19,9 @@ export class Spirit {
         this.defense = def.defense(ks);
         this.init = def.init ? def.init(ks) : SpiritCalculations.init(ks);
         this.astralInit = def.astralInit ? def.astralInit(ks) : SpiritCalculations.astralInit(ks);
+
+        const maxExtras = Spirit.getMaxOptionalPowers(this.ks);
+        const validExtras = selectedOptionalPowers.slice(0, maxExtras);
 
         this.powers = [...def.powers, ...selectedOptionalPowers];
     }
@@ -83,8 +86,11 @@ export class Spirit {
         return SpiritCalculations.health(this.ks);
     }
 
-    get skillValue() {
-        return this.ks;
+    getSkills() {
+        return this.skills.map(skillName => ({
+            name: skillName,
+            rating: this.ks
+        }));
     }
 }
 
