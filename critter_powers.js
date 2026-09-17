@@ -179,6 +179,30 @@ export const powerData = {
                 rangeBands: [mag * 2, mag, 0, 0, 0]
             };
         }
+    },
+    "Bewusstsein": {
+        shortDesc: "Verleiht Verstand analog zum Homo sapiens und erlaubt ungeübte Proben.",
+        art: "M",
+        action: "Auto",
+        range: "Selbst",
+        duration: "Immer",
+        text: "Critter mit dieser Kraft sind sich ihrer selbst bewusst, werden nicht mehr primär vom Instinkt getrieben und besitzen im Allgemeinen eine ähnliche Intelligenz wie der Homo sapiens. Sie gelten nicht als ahnungslos, sondern können Fertigkeiten, die sie nicht besitzen, ungeübt einsetzen sowie neue Fertigkeiten erlernen."
+    },
+    "Astrale Gestalt": {
+        shortDesc: "Existiert rein auf der Astralebene; immun gegen physische Effekte.",
+        art: "M",
+        action: "Auto",
+        range: "Selbst",
+        duration: "Immer",
+        text: "Der Critter existiert ausschließlich auf der Astralebene und ist immun gegen physische Angriffe. Er kann nur durch astrale Angriffe, Manazauber oder Mana-Kräfte verletzt werden und nur auf astrale Wesen, Dualwesen oder astral wahrnehmende/projizierende Personen einwirken. Auf der physischen Ebene kann er sich lediglich manifestieren."
+    },
+    "Materialisieren": {
+        shortDesc: "Erzeugt eine physische Form; der Geist wird zum Dualwesen mit Immunität gegen Normale Waffen.",
+        art: "M",
+        action: "H",
+        range: "Selbst",
+        duration: "Aufrechterhalten",
+        text: "Ermöglicht dem astralen Wesen, über eine Haupthandlung eine physische Gestalt in der materiellen Welt anzunehmen. Solange der Geist materialisiert ist, existiert er gleichzeitig auf der physischen und der Astralebene (Dualwesen): Er kann mit physischen sowie astralen Wesen interagieren und von beiden angegriffen werden, nimmt beide Ebenen gleichzeitig ohne den sonst üblichen Abzug (-2) wahr und erhält Immunität gegen Normale Waffen. Das Entmaterialisieren zur Rückkehr auf die reine Astralebene erfordert eine Nebenhandlung."
     }
 };
 
