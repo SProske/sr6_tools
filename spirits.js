@@ -1,4 +1,5 @@
 import { spiritDefinitions, SpiritCalculations } from './spirit_definitions.js';
+import { getPowerData } from './critter_powers.js';
 
 export class Spirit {
     static STANDARD_ATTRIBUTES = ["KON", "GES", "REA", "STR", "WIL", "LOG", "INT", "CHA", "M", "ESS"];
