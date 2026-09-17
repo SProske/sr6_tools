@@ -84,6 +84,80 @@ export const powerData = {
             attack.status = ELEMENT_STATUS_MAP[element] || null;
             attack.rangeBands[0] += mag;
         }
+    },
+    "Verschlingen": {
+        shortDesc: "Zieht ein Opfer in sich hinein, umschlingt es und fügt ihm kontinuierlich Schaden zu.",
+        art: "P", action: "H", range: "B", duration: "Aufrechterhalten",
+        
+        // Dynamischer Regeltext: Zeigt bei Elementarvarianten nur den relevanten Zusatz
+        getText: (powerName) => {
+            const { param } = parsePowerString(powerName);
+            const baseText = "Diese Kraft ermöglicht einem Critter, ein Opfer in sich selbst oder in das von ihm beherrschte Terrain hineinzuziehen, es zu verschlingen oder zu ersticken und ihm dadurch Schaden zuzufügen. Es handelt sich um einen Nahkampfangriff mit einem Schadenswert von (Magie)K (Schadensart) sowie speziellen Auswirkungen je nach Element; der Angriffswert erhöht sich um die Magie des Critters, und der Critter hält das Opfer fest umschlungen. Nettoerfolge bei der Nahkampfprobe erhöhen den Schaden wie üblich, und das Opfer kann eine normale Schadenswiderstandsprobe ablegen. Aber selbst wenn das Opfer sämtlichen Schaden abwendet, bleibt es trotzdem umschlungen und befindet sich im Status {Bewegungsunfähig}. Immer, wenn der Critter in einer Kampfrunde an der Reihe ist, verursacht er automatisch den gleichen Schaden wie oben am umschlungenen Opfer. Ist das Opfer an der Reihe, kann es eine Haupthandlung aufwenden, um einen Befreiungsversuch zu unternehmen (Vergleichende Probe auf <em>Athletik + Stärke</em> gegen <em>Konstitution + Magie</em> des Critters).";
+
+            const elementTexts = {
+                "Erde": "<br><br><strong>Verschlingen durch Erde:</strong> Das Opfer leistet Widerstand gegen (Magie + 2)K Schaden. Es erhält den Status {Erschöpft I}.",
+                "Feuer": "<br><br><strong>Verschlingen durch Feuer:</strong> Das Opfer leistet Widerstand gegen (Magie + 2)K Schaden und erhält den Status {Brennend}, solange es umschlungen ist, sowie noch eine weitere Kampfrunde lang.",
+                "Luft": "<br><br><strong>Verschlingen durch Luft:</strong> Das Opfer leistet Widerstand gegen (Magie + 2)B Schaden. Wird das Opfer durch den Schaden bewusstlos, erleidet es weiter Schaden, wobei der überzählige Betäubungsschaden wie üblich zu Körperlichem Schaden wird. Das Opfer erhält den Status {Erschöpft I}.",
+                "Wasser": "<br><br><strong>Verschlingen durch Wasser:</strong> Das Opfer leistet Widerstand gegen (Magie + 2)B Schaden. Wird das Opfer durch den Betäubungsschaden bewusstlos, erleidet es weiter Schaden, wobei der Betäubungsschaden wie üblich in Körperlichen Schaden überfließt. Das Opfer erhält die Status {Nass} und {Erschöpft I}."
+            };
+
+            if (param && elementTexts[param]) {
+                return baseText + elementTexts[param];
+            }
+
+            // Fallback für generisches Verschlingen: Alle Varianten auflisten
+            return baseText + "<br><br>" + Object.values(elementTexts).join("<br>");
+        },
+
+        // Generierung des Nahkampfangriffs
+        getGrantedAttack: (spirit, powerName) => {
+            const { param } = parsePowerString(powerName);
+            const mag = spirit.attributes["M"] || spirit.ks;
+            const ges = spirit.attributes["GES"] || spirit.ks;
+            const rea = spirit.attributes["REA"] || spirit.ks;
+            const str = spirit.attributes["STR"] || spirit.ks;
+
+            let dmgValue = mag;
+            let dmgType = "K";
+            let statusList = ["Bewegungsunfähig"];
+
+            // Element-Spezifika
+            if (param === "Erde") {
+                dmgValue = mag + 2;
+                dmgType = "K";
+                statusList.push("Erschöpft I");
+            } else if (param === "Feuer") {
+                dmgValue = mag + 2;
+                dmgType = "K";
+                statusList.push("Brennend");
+            } else if (param === "Luft") {
+                dmgValue = mag + 2;
+                dmgType = "B";
+                statusList.push("Erschöpft I");
+            } else if (param === "Wasser") {
+                dmgValue = mag + 2;
+                dmgType = "B";
+                statusList.push("Nass", "Erschöpft I");
+            } else if (param === "Strahlung") {
+                dmgValue = mag;
+                dmgType = "K";
+                statusList.push("Verstrahlt");
+            }
+
+            // AW im Nahkampf = REA + STR + Magie
+            const baseAw = rea + str + mag;
+
+            return {
+                name: param ? `Verschlingen (${param})` : "Verschlingen",
+                damageValue: dmgValue,
+                damageType: dmgType,
+                element: param,
+                status: statusList.join(", "),
+                poolValue: ges + spirit.ks,
+                poolDesc: "Nahkampf + Geschicklichkeit",
+                rangeBands: [baseAw, 0, 0, 0, 0]
+            };
+        }
     }
 };
 
