@@ -31,6 +31,44 @@ export class Spirit {
         return attrs;
     }
 
+    getAttacks() {
+        const attacks = [];
+        const rea = this.attributes["REA"];
+        const str = this.attributes["STR"];
+        const ges = this.attributes["GES"];
+        
+        let baseDmg = 2;
+        if (this.typeKey === "mensch") {
+            baseDmg = Math.max(2, Math.floor(this.ks / 2) - 1);
+        }
+
+        const baseAttack = {
+            name: "Waffenloser Angriff",
+            damageValue: baseDmg,
+            damageType: "B",
+            element: null,
+            status: null,
+            poolValue: this.ks + ges,
+            poolDesc: "Nahkampf + Geschicklichkeit",
+            rangeBands: [rea + str, 0, 0, 0, 0]
+        };
+
+        this.powers.forEach(powerName => {
+            const pInfo = getPowerData(powerName);
+            
+            if (pInfo && pInfo.modifyBaseAttack) {
+                pInfo.modifyBaseAttack(baseAttack, this, powerName);
+            }
+            
+            if (pInfo && pInfo.getGrantedAttack) {
+                attacks.push(pInfo.getGrantedAttack(this, powerName));
+            }
+        });
+
+        attacks.unshift(baseAttack);
+        return attacks;
+    }
+
     get health() {
         return SpiritCalculations.health(this.ks);
     }
