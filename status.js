@@ -23,5 +23,8 @@ export const statusData = {
     "Erschöpft II": "Das Ziel erleidet einen Abzug von -2 auf alle Proben.",
     "Erschöpft III": "Das Ziel erleidet einen Abzug von -3 auf alle Proben.",
     "Übelkeit": "Lorem ipsum: Das Ziel erleidet schwere Übelkeit, Handlungen sind stark eingeschränkt.",
-    "Humpelnd": "Das Ziel leidet unter stark eingeschränkter Fortbewegung; Laufen und Sprinten sind erschwert und die Bewegungsrate ist deutlich reduziert."
+    "Humpelnd": "Das Ziel leidet unter stark eingeschränkter Fortbewegung; Laufen und Sprinten sind erschwert und die Bewegungsrate ist deutlich reduziert.",
+    "Vergiftet": "Das Ziel steht unter dem Einfluss eines Toxins und erleidet periodischen Schaden oder Eigenschaftsabzüge.",
+    "Panisch": "Das Ziel flieht unter Kontrollverlust bedingungslos vor der Quelle des Schreckens und kann keine Angriffshandlungen ausführen.",
+    "Verängstigt": "Das Ziel steht unter dem Eindruck schwerer Furcht und erleidet Abzüge auf Proben."
 };
