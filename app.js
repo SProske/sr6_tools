@@ -1,6 +1,13 @@
-import { spiritData } from './spirits.js';
-import { powerData, getPowerData } from './critter_powers.js';
-import { statusData, ELEMENT_STATUS_MAP } from './status.js'
+import { Spirit, spiritDefinitions } from './spirits.js';
+import { getPowerData } from './critter_powers.js';
+import { statusData, ELEMENT_STATUS_MAP } from './status.js';
+
+function formatMovement(movement) {
+    if (!movement) return "-";
+    const { walk, run, sprintBonus } = movement;
+    const bonus = sprintBonus >= 0 ? `+${sprintBonus}` : sprintBonus;
+    return `${walk} / ${run} / ${bonus}`;
+}
 
 function formatTextWithTooltips(rawText) {
     if (!rawText) return "";
@@ -12,7 +19,7 @@ function formatTextWithTooltips(rawText) {
 
 function populateSpiritDropdown() {
     const select = document.getElementById('geistertyp');
-    select.innerHTML = Object.entries(spiritData)
+    select.innerHTML = Object.entries(spiritDefinitions)
         .map(([key, data]) => `<option value="${key}">${data.name}</option>`)
         .join('');
 }
@@ -20,7 +27,7 @@ function populateSpiritDropdown() {
 function renderOptionalPowers() {
     const ks = parseInt(document.getElementById('kraftstufe').value) || 1;
     const typ = document.getElementById('geistertyp').value;
-    const data = spiritData[typ];
+    const data = spiritDefinitions[typ];
     
     const maxAllowed = Math.floor(ks / 3);
     document.getElementById('maxOptionalCount').innerText = maxAllowed;
@@ -45,7 +52,6 @@ function renderOptionalPowers() {
         `;
     }).join('');
 
-    // Event-Listener für dynamisch erzeugte Checkboxen
     listContainer.querySelectorAll('.opt-power-cb').forEach(cb => {
         cb.addEventListener('change', () => limitCheckboxes(maxAllowed));
     });
@@ -125,44 +131,42 @@ function renderPowerCard(powerName) {
 function generateSpirit() {
     const ks = parseInt(document.getElementById('kraftstufe').value) || 1;
     const typ = document.getElementById('geistertyp').value;
-    const data = spiritData[typ];
+    const selectedExtras = Array.from(document.querySelectorAll('.opt-power-cb:checked')).map(cb => cb.value);
 
-    document.getElementById('spiritName').innerText = `${data.name} (Kraftstufe ${ks})`;
+    // Geist-Instanz erzeugen
+    const spirit = new Spirit(typ, ks, selectedExtras);
+
+    document.getElementById('spiritName').innerText = `${spirit.name} (Kraftstufe ${spirit.ks})`;
     
-    const attrs = data.attributes(ks);
-    document.getElementById('attributeGrid').innerHTML = Object.entries(attrs)
+    document.getElementById('attributeGrid').innerHTML = Object.entries(spirit.attributes)
         .map(([key, val]) => `<div class="stat-box"><span>${key}</span><strong>${val}</strong></div>`)
         .join('');
 
-    document.getElementById('spiritInit').innerText = data.init(ks);
-    document.getElementById('spiritAstralInit').innerText = data.astralInit(ks);
-    document.getElementById('spiritHealth').innerText = data.health(ks);
-    document.getElementById('spiritMovement').innerText = data.movement;
+    document.getElementById('spiritInit').innerText = spirit.init;
+    document.getElementById('spiritAstralInit').innerText = spirit.astralInit;
+    document.getElementById('spiritHealth').innerText = spirit.health;
+    document.getElementById('spiritMovement').innerText = formatMovement(spirit.movement);
 
-    const def = data.defense(ks);
-    document.getElementById('vwAstral').innerText = def.astral;
-    document.getElementById('vwMagisch').innerText = def.magisch;
-    document.getElementById('vwWeltlich').innerText = def.weltlich;
+    document.getElementById('vwAstral').innerText = spirit.defense.astral;
+    document.getElementById('vwMagisch').innerText = spirit.defense.magisch;
+    document.getElementById('vwWeltlich').innerText = spirit.defense.weltlich;
 
-    const selectedExtras = Array.from(document.querySelectorAll('.opt-power-cb:checked')).map(cb => cb.value);
-    const allPowers = [...data.powers, ...selectedExtras];
-
-    document.getElementById('spiritSkills').innerText = data.skills.map(s => `${s} ${ks}`).join(', ');
+    document.getElementById('spiritSkills').innerText = spirit.skills.map(s => `${s} ${spirit.skillValue}`).join(', ');
 
     // Angriffe rendern
-    let attackItems = [generateMeleeAttack(ks, typ, attrs, allPowers)];
-    allPowers.forEach(powerName => {
+    let attackItems = [generateMeleeAttack(spirit.ks, spirit.typeKey, spirit.attributes, spirit.powers)];
+    spirit.powers.forEach(powerName => {
         const pInfo = getPowerData(powerName);
         if (pInfo && pInfo.getAttack) {
-            attackItems.push(`<li>${formatTextWithTooltips(pInfo.getAttack(ks, powerName, attrs))}</li>`);
+            attackItems.push(`<li>${formatTextWithTooltips(pInfo.getAttack(spirit.ks, powerName, spirit.attributes))}</li>`);
         }
     });
     document.getElementById('spiritAttacks').innerHTML = attackItems.join('');
 
-    // Kräfte-Karten rendern
-    document.getElementById('spiritPowersList').innerHTML = allPowers.map(renderPowerCard).join('');
+    // Kräftekarten rendern
+    document.getElementById('spiritPowersList').innerHTML = spirit.powers.map(renderPowerCard).join('');
 
-    document.getElementById('spiritWeaknesses').innerText = data.weaknesses.length > 0 ? data.weaknesses.join(', ') : 'Keine';
+    document.getElementById('spiritWeaknesses').innerText = spirit.weaknesses.length > 0 ? spirit.weaknesses.join(', ') : 'Keine';
     document.getElementById('output').style.display = 'block';
 }
 
