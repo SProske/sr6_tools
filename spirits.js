@@ -41,7 +41,7 @@ export class Spirit {
         return Math.floor(ks / 3);
     }
 
-    static getOptionalPowersForType(typeKey) {
+    static getOptionalPowersForType(typeKey, excludedSkill = null) {
         const def = spiritDefinitions[typeKey];
         if (!def || !def.optionalPowers) return [];
 
