@@ -16,22 +16,6 @@ export function parsePowerString(powerName) {
 }
 
 export const powerData = {
-    "Grauen": {
-        shortDesc: "Versetzt ein Ziel in Panik und zwingt es zu fliehen.",
-        art: "M",
-        action: "H",
-        range: "BF",
-        duration: "Speziell",
-        text: "Diese Kraft ermöglicht einem Critter, seine Opfer mit einem überwältigenden Entsetzen zu erfüllen. Das Opfer flieht voller Panik und bleibt nicht eher stehen, bis es in Sicherheit und außer Sicht des Critters ist; es erhält die Status {Panisch} und {Verängstigt}. Der Critter legt eine Vergleichende Probe auf seine Willenskraft + Magie gegen Willenskraft + Logik des Opfers ab. Das Grauen hält 1 Kampfrunde pro Nettoerfolg des Critters an, die Status halten doppelt so lange an. Und auch wenn das Entsetzen verflogen ist, muss dem Opfer eine Probe auf Willenskraft + Logik (halbe Magie des Critters; aufgerundet) gelingen, um genug Mut zu haben, dem Critter erneut gegenüberzutreten."
-    },
-    "Verwirrung": {
-        shortDesc: "Verwirrt ein Ziel und macht es Benommen.",
-        art: "M",
-        action: "H",
-        range: "BF",
-        duration: "Aufrechterhalten",
-        text: "Diese Kraft sorgt dafür, dass das Opfer unentschlossen, vergesslich und verwirrt wird. Der Critter legt eine Vergleichende Probe auf Willenskraft + Magie gegen Willenskraft + Logik des Opfers ab. Erzielt der Critter Nettoerfolge, so erhält das Opfer den Status {Verwirrt} mit einer Stufe in Höhe der Nettoerfolge sowie den Status {Benommen}."
-    },
     "Elementarer Angriff": {
         shortDesc: "Fernkampfangriff mit projizierter elementarer Energie.",
         art: "P",
