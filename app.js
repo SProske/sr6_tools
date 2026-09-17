@@ -47,9 +47,11 @@ function populateSpiritDropdown() {
 function renderOptionalPowers() {
     const ks = parseInt(document.getElementById('kraftstufe').value) || 1;
     const typ = document.getElementById('geistertyp').value;
-    const data = spiritDefinitions[typ];
     
-    const maxAllowed = Math.floor(ks / 3);
+    // Neu: Beide Werten direkt von der Spirit-Klasse abfragen
+    const maxAllowed = Spirit.getMaxOptionalPowers(ks);
+    const optionalPowers = Spirit.getOptionalPowersForType(typ);
+
     document.getElementById('maxOptionalCount').innerText = maxAllowed;
 
     const listContainer = document.getElementById('optionalPowersList');
@@ -59,7 +61,8 @@ function renderOptionalPowers() {
         return;
     }
 
-    listContainer.innerHTML = data.optionalPowers.map(powerName => {
+    // Neu: optionalPowers (Array) statt data.optionalPowers
+    listContainer.innerHTML = optionalPowers.map(powerName => {
         const info = getPowerData(powerName);
         return `
             <div class="checkbox-item">
