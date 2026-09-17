@@ -103,12 +103,12 @@ function limitCheckboxes(max) {
     });
 }
 
-function renderPowerCard(powerName) {
+function renderPowerCard(powerName, spirit) {
     const p = getPowerData(powerName);
     const statsLine = p.art ? `<div class="power-stats">Art: ${p.art} | Handlung: ${p.action} | Reichweite: ${p.range} | Dauer: ${p.duration}</div>` : "";
     
-    // Prüfen, ob die Kraft eine dynamische getText-Funktion hat
-    const rawText = p.getText ? p.getText(powerName) : p.text;
+    // Pass spirit parameter to getText if available
+    const rawText = p.getText ? p.getText(powerName, spirit) : p.text;
     const formattedText = formatTextWithTooltips(rawText);
 
     return `
@@ -154,7 +154,9 @@ function generateSpirit() {
         .join('');
 
     // Kräftekarten rendern
-    document.getElementById('spiritPowersList').innerHTML = spirit.powers.map(renderPowerCard).join('');
+    document.getElementById('spiritPowersList').innerHTML = spirit.powers
+    .map(pName => renderPowerCard(pName, spirit))
+    .join('');
 
     document.getElementById('spiritWeaknesses').innerText = spirit.weaknesses.length > 0 ? spirit.weaknesses.join(', ') : 'Keine';
     document.getElementById('output').style.display = 'block';
