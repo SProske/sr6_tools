@@ -172,6 +172,70 @@ ul {
     opacity: 1;
 }
 
+/* Zustandsmonitor Container */
+.condition-monitor-wrapper {
+    margin: 12px 0;
+}
+
+.condition-monitor-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 70px); /* Exakt 3 Kästchen pro Zeile */
+    gap: 8px;
+    margin-top: 8px;
+}
+
+/* Einzelnes Schadenskästchen */
+.cm-box {
+    position: relative;
+    border: 2px solid #333;
+    border-radius: 4px;
+    height: 55px;
+    background: #fdfdfd;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 3px;
+    box-sizing: border-box;
+}
+
+.cm-number {
+    font-size: 0.75em;
+    color: #666;
+    font-weight: bold;
+}
+
+.cm-checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    margin: 2px 0;
+}
+
+/* Wundmodifikator-Badge im Kästchen */
+.cm-badge {
+    font-size: 0.7em;
+    font-weight: bold;
+    color: #d9534f;
+    min-height: 12px;
+}
+
+/* Hervorhebung für das letzte Kästchen (Vernichtung) */
+.cm-box.last-box {
+    border-color: #a94442;
+    background-color: #fdf2f2;
+}
+
+.cm-box.last-box .cm-badge {
+    color: #a94442;
+}
+
+/* Live-Anzeige unter dem Monitor */
+.wound-penalty-text {
+    margin-top: 8px;
+    font-size: 0.95em;
+}
+
 @media print {
     /* 1. DIN A4 Ränder festlegen */
     @page {
@@ -235,5 +299,13 @@ ul {
     /* 7. Export-Leiste im Druck verstecken */
     .export-bar {
         display: none !important;
+    }
+
+    .cm-box {
+        border-color: #000 !important;
+        background: #fff !important;
+    }
+    .cm-checkbox {
+        accent-color: #000;
     }
 }
