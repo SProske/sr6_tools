@@ -45,9 +45,9 @@ function exportToHtml() {
         .status-tooltip:hover .tooltip-text { display: block; }
         .export-bar { display: none !important; }
         .condition-monitor-grid { display: grid; grid-template-columns: repeat(3, 70px); gap: 8px; margin-top: 8px; }
-        .cm-box { border: 2px solid #333; border-radius: 4px; height: 55px; background: #fdfdfd; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 3px; box-sizing: border-box; }
+        .cm-box { border: 2px solid #333; border-radius: 4px; height: 55px; background: #fdfdfd; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 3px; box-sizing: border-box; cursor: pointer; }
         .cm-number { font-size: 0.75em; color: #666; font-weight: bold; }
-        .cm-checkbox { width: 18px; height: 18px; cursor: pointer; margin: 2px 0; }
+        .cm-checkbox { width: 18px; height: 18px; margin: 2px 0; pointer-events: none; }
         .cm-badge { font-size: 0.7em; font-weight: bold; color: #d9534f; min-height: 12px; }
         .cm-box.last-box { border-color: #a94442; background-color: #fdf2f2; }
         .summoning-box { background: #fdfdfd; border: 1px solid #ccc; border-left: 4px solid #d9534f; padding: 10px; margin: 10px 0; border-radius: 4px; }
@@ -60,7 +60,7 @@ function exportToHtml() {
     <div id="output">${outputContent}</div>
     <script>
         document.querySelectorAll('.cm-box').forEach(box => {
-            box.addEventListener('click', (e) => {
+            box.addEventListener('click', () => {
                 const targetIdx = parseInt(box.dataset.index, 10);
                 const allBoxes = Array.from(document.querySelectorAll('.cm-checkbox'));
                 const highestChecked = allBoxes.reduce((max, cb, idx) => cb.checked ? idx + 1 : max, 0);
@@ -110,10 +110,9 @@ function renderConditionMonitor(totalBoxes) {
     html += '</div>';
     container.innerHTML = html;
 
+    // Kaskadierendes Ankreuzen ohne e.preventDefault()-Konflikte
     container.querySelectorAll('.cm-box').forEach(box => {
-        box.addEventListener('click', (e) => {
-            if (e.target.tagName === 'INPUT') e.preventDefault();
-
+        box.addEventListener('click', () => {
             const targetIndex = parseInt(box.dataset.index, 10);
             const checkboxes = Array.from(container.querySelectorAll('.cm-checkbox'));
 
