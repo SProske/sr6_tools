@@ -12,7 +12,6 @@ function exportToPng() {
     const outputElem = document.getElementById('output');
     const spiritName = document.getElementById('spiritName').innerText || 'Geist';
     
-    // Temporär Buttons verbergen, damit sie nicht auf dem Bild landen
     const exportBar = document.querySelector('.export-bar');
     if (exportBar) exportBar.style.display = 'none';
 
@@ -30,7 +29,6 @@ function exportToHtml() {
     const outputContent = document.getElementById('output').innerHTML;
     const spiritName = document.getElementById('spiritName').innerText || 'Geist';
 
-    // Eigenständiges HTML-Dokument mit Basis-Styling erzeugen
     const fullHtml = `<!DOCTYPE html>
 <html lang="de">
 <head>
@@ -46,10 +44,28 @@ function exportToHtml() {
         .status-tooltip .tooltip-text { display: none; position: absolute; background: #333; color: #fff; padding: 5px; border-radius: 4px; font-size: 0.8em; z-index: 100; }
         .status-tooltip:hover .tooltip-text { display: block; }
         .export-bar { display: none !important; }
+        .condition-monitor-grid { display: grid; grid-template-columns: repeat(3, 70px); gap: 8px; margin-top: 8px; }
+        .cm-box { border: 2px solid #333; border-radius: 4px; height: 55px; background: #fdfdfd; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 3px; box-sizing: border-box; }
+        .cm-number { font-size: 0.75em; color: #666; font-weight: bold; }
+        .cm-checkbox { width: 18px; height: 18px; cursor: pointer; margin: 2px 0; }
+        .cm-badge { font-size: 0.7em; font-weight: bold; color: #d9534f; min-height: 12px; }
+        .cm-box.last-box { border-color: #a94442; background-color: #fdf2f2; }
     </style>
 </head>
 <body>
     <div id="output">${outputContent}</div>
+    <script>
+        // Kaskadierendes Ankreuzen auch in der exportierten HTML-Datei aufrechterhalten
+        document.querySelectorAll('.cm-box').forEach(box => {
+            box.addEventListener('click', (e) => {
+                const targetIdx = parseInt(box.dataset.index, 10);
+                const allBoxes = Array.from(document.querySelectorAll('.cm-checkbox'));
+                const highestChecked = allBoxes.reduce((max, cb, idx) => cb.checked ? idx + 1 : max, 0);
+                const newCount = (targetIdx === highestChecked) ? targetIdx - 1 : targetIdx;
+                allBoxes.forEach((cb, idx) => { cb.checked = (idx + 1) <= newCount; });
+            });
+        });
+    </script>
 </body>
 </html>`;
 
@@ -80,7 +96,7 @@ function renderConditionMonitor(totalBoxes) {
         }
 
         html += `
-            <div class="cm-box ${isLastBox ? 'last-box' : ''}">
+            <div class="cm-box ${isLastBox ? 'last-box' : ''}" data-index="${i}">
                 <span class="cm-number">${i}</span>
                 <input type="checkbox" class="cm-checkbox" id="cm-box-${i}">
                 <span class="cm-badge">${badgeText}</span>
@@ -89,29 +105,28 @@ function renderConditionMonitor(totalBoxes) {
     }
 
     html += '</div>';
-    html += '<div id="activeWoundPenalty" class="wound-penalty-text">Aktueller Wundabzug: <strong>0 Würfel</strong></div>';
-
     container.innerHTML = html;
 
-    // Event-Listener für Live-Berechnung des Wundabzugs
-    container.querySelectorAll('.cm-checkbox').forEach(cb => {
-        cb.addEventListener('change', updateWoundPenalty);
+    // Kaskadierendes Ankreuzen: Klick auf Kästchen/Checkbox füllt alle vorherigen mit aus
+    container.querySelectorAll('.cm-box').forEach(box => {
+        box.addEventListener('click', (e) => {
+            // Verhindert doppeltes Triggern, falls direkt auf die Checkbox geklickt wurde
+            if (e.target.tagName === 'INPUT') e.preventDefault();
+
+            const targetIndex = parseInt(box.dataset.index, 10);
+            const checkboxes = Array.from(container.querySelectorAll('.cm-checkbox'));
+
+            // Prüfen, was aktuell der höchste angehakte Index ist
+            const highestChecked = checkboxes.reduce((max, cb, idx) => cb.checked ? idx + 1 : max, 0);
+
+            // Wenn man das höchste bereits angehakte Kästchen erneut anklickt, wird es abgewählt
+            const newCheckedCount = (targetIndex === highestChecked) ? targetIndex - 1 : targetIndex;
+
+            checkboxes.forEach((cb, idx) => {
+                cb.checked = (idx + 1) <= newCheckedCount;
+            });
+        });
     });
-}
-
-function updateWoundPenalty() {
-    const checkedBoxes = document.querySelectorAll('.cm-checkbox:checked').length;
-    const totalBoxes = document.querySelectorAll('.cm-checkbox').length;
-    const penalty = Math.floor(checkedBoxes / 3);
-
-    const penaltyElem = document.getElementById('activeWoundPenalty');
-    if (!penaltyElem) return;
-
-    if (checkedBoxes >= totalBoxes && totalBoxes > 0) {
-        penaltyElem.innerHTML = `Aktueller Wundabzug: <strong style="color: #a94442;">Geist vernichtet / aufgelöst! (-${penalty} Wf)</strong>`;
-    } else {
-        penaltyElem.innerHTML = `Aktueller Wundabzug: <strong>-${penalty} Würfel</strong>`;
-    }
 }
 
 function formatMovement(movement) {
@@ -205,12 +220,10 @@ function renderOptionalPowers() {
         `;
     }).join('');
 
-    // Event-Listener zum Limitieren und für das Ein-/Ausblenden der Config-Felder
     listContainer.querySelectorAll('.opt-power-cb').forEach(cb => {
         cb.addEventListener('change', (e) => {
             limitCheckboxes(maxAllowed);
             
-            // Ein-/Ausblenden der Spezialisierungs-Eingabefelder für optionale Fertigkeiten
             const skillName = e.target.dataset.skill;
             if (skillName) {
                 const configBox = document.getElementById(`opt-config-${skillName}`);
@@ -284,7 +297,6 @@ function generateSpirit() {
     const typ = document.getElementById('geistertyp').value;
     const selectedExtras = Array.from(document.querySelectorAll('.opt-power-cb:checked')).map(cb => cb.value);
 
-    // Eingaben für optionale Fertigkeiten einsammeln
     const optionalSkillsConfigs = {};
     document.querySelectorAll('.opt-power-cb:checked').forEach(cb => {
         const skillName = cb.dataset.skill;
@@ -298,7 +310,6 @@ function generateSpirit() {
         }
     });
 
-    // Gesamt-Config für das Spirit-Objekt zusammenstellen
     const config = {
         primarySkill: document.getElementById('primarySkillSelect')?.value || null,
         primarySpec: document.getElementById('primarySpecInput')?.value?.trim() || '',
@@ -308,7 +319,6 @@ function generateSpirit() {
 
     const spirit = new Spirit(typ, ks, selectedExtras, config);
 
-    // UI-Rendering
     document.getElementById('spiritName').innerText = `${spirit.name} (Kraftstufe ${spirit.ks})`;
     
     document.getElementById('attributeGrid').innerHTML = Object.entries(spirit.attributes)
