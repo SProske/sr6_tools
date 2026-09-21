@@ -61,6 +61,59 @@ function exportToHtml() {
     URL.revokeObjectURL(link.href);
 }
 
+function renderConditionMonitor(totalBoxes) {
+    const container = document.getElementById('conditionMonitor');
+    if (!container) return;
+
+    let html = '<div class="condition-monitor-grid">';
+
+    for (let i = 1; i <= totalBoxes; i++) {
+        const isLineEnd = (i % 3 === 0);
+        const isLastBox = (i === totalBoxes);
+        const linePenalty = Math.floor(i / 3);
+
+        let badgeText = "";
+        if (isLastBox) {
+            badgeText = "💀 Vernichtet";
+        } else if (isLineEnd) {
+            badgeText = `-${linePenalty} Wf`;
+        }
+
+        html += `
+            <div class="cm-box ${isLastBox ? 'last-box' : ''}">
+                <span class="cm-number">${i}</span>
+                <input type="checkbox" class="cm-checkbox" id="cm-box-${i}">
+                <span class="cm-badge">${badgeText}</span>
+            </div>
+        `;
+    }
+
+    html += '</div>';
+    html += '<div id="activeWoundPenalty" class="wound-penalty-text">Aktueller Wundabzug: <strong>0 Würfel</strong></div>';
+
+    container.innerHTML = html;
+
+    // Event-Listener für Live-Berechnung des Wundabzugs
+    container.querySelectorAll('.cm-checkbox').forEach(cb => {
+        cb.addEventListener('change', updateWoundPenalty);
+    });
+}
+
+function updateWoundPenalty() {
+    const checkedBoxes = document.querySelectorAll('.cm-checkbox:checked').length;
+    const totalBoxes = document.querySelectorAll('.cm-checkbox').length;
+    const penalty = Math.floor(checkedBoxes / 3);
+
+    const penaltyElem = document.getElementById('activeWoundPenalty');
+    if (!penaltyElem) return;
+
+    if (checkedBoxes >= totalBoxes && totalBoxes > 0) {
+        penaltyElem.innerHTML = `Aktueller Wundabzug: <strong style="color: #a94442;">Geist vernichtet / aufgelöst! (-${penalty} Wf)</strong>`;
+    } else {
+        penaltyElem.innerHTML = `Aktueller Wundabzug: <strong>-${penalty} Würfel</strong>`;
+    }
+}
+
 function formatMovement(movement) {
     if (!movement) return "-";
     const { walk, run, sprintBonus } = movement;
@@ -264,7 +317,7 @@ function generateSpirit() {
 
     document.getElementById('spiritInit').innerText = spirit.init;
     document.getElementById('spiritAstralInit').innerText = spirit.astralInit;
-    document.getElementById('spiritHealth').innerText = spirit.health;
+    renderConditionMonitor(spirit.health);
     document.getElementById('spiritMovement').innerText = formatMovement(spirit.movement);
 
     document.getElementById('vwAstral').innerText = spirit.defense.astral;
