@@ -2,6 +2,65 @@ import { Spirit, spiritDefinitions } from './spirits.js';
 import { getPowerData, parsePowerString } from './critter_powers.js';
 import { statusData } from './status.js';
 
+// --- EXPORT FUNKTIONEN ---
+
+function exportToPrint() {
+    window.print();
+}
+
+function exportToPng() {
+    const outputElem = document.getElementById('output');
+    const spiritName = document.getElementById('spiritName').innerText || 'Geist';
+    
+    // Temporär Buttons verbergen, damit sie nicht auf dem Bild landen
+    const exportBar = document.querySelector('.export-bar');
+    if (exportBar) exportBar.style.display = 'none';
+
+    html2canvas(outputElem, { scale: 2 }).then(canvas => {
+        if (exportBar) exportBar.style.display = 'block';
+
+        const link = document.createElement('a');
+        link.download = `${spiritName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    });
+}
+
+function exportToHtml() {
+    const outputContent = document.getElementById('output').innerHTML;
+    const spiritName = document.getElementById('spiritName').innerText || 'Geist';
+
+    // Eigenständiges HTML-Dokument mit Basis-Styling erzeugen
+    const fullHtml = `<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>${spiritName}</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #fff; color: #222; max-width: 800px; margin: 0 auto; }
+        .stat-box { display: inline-block; border: 1px solid #ccc; padding: 6px 12px; margin: 2px; text-align: center; border-radius: 4px; }
+        .power-block { border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 4px; background: #f9f9f9; }
+        .power-header { font-weight: bold; font-size: 1.1em; color: #111; }
+        .power-stats { font-size: 0.85em; color: #555; margin: 4px 0; }
+        .status-tooltip { text-decoration: underline dotted; font-weight: bold; cursor: help; position: relative; }
+        .status-tooltip .tooltip-text { display: none; position: absolute; background: #333; color: #fff; padding: 5px; border-radius: 4px; font-size: 0.8em; z-index: 100; }
+        .status-tooltip:hover .tooltip-text { display: block; }
+        .export-bar { display: none !important; }
+    </style>
+</head>
+<body>
+    <div id="output">${outputContent}</div>
+</body>
+</html>`;
+
+    const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${spiritName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.html`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+}
+
 function formatMovement(movement) {
     if (!movement) return "-";
     const { walk, run, sprintBonus } = movement;
@@ -247,4 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('geistertyp').addEventListener('change', handleGeistertypChange);
     document.getElementById('kraftstufe').addEventListener('input', renderOptionalPowers);
     document.getElementById('generateBtn').addEventListener('click', generateSpirit);
+    document.getElementById('btnExportPrint')?.addEventListener('click', exportToPrint);
+    document.getElementById('btnExportPng')?.addEventListener('click', exportToPng);
+    document.getElementById('btnExportHtml')?.addEventListener('click', exportToHtml);
 });
