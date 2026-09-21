@@ -173,26 +173,66 @@ ul {
 }
 
 @media print {
-    /* Alle Elemente der Seite ausblenden */
+    /* 1. DIN A4 Ränder festlegen */
+    @page {
+        size: A4 portrait;
+        margin: 10mm;
+    }
+
+    /* 2. Hintergrund & Abstände des Body zurücksetzen */
+    html, body {
+        width: 100% !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #fff !important;
+        color: #000 !important;
+    }
+
+    /* 3. Alle Nicht-Druck-Elemente ausblenden */
     body * {
         visibility: hidden;
     }
-    
-    /* Nur das Output-Sheet und dessen Kinder anzeigen */
+
     #output, #output * {
         visibility: visible;
+        box-sizing: border-box !important; /* Verhindert Randausdehnung */
     }
-    
+
+    /* 4. Sheet exakt auf Seitenbreite einpassen */
     #output {
         position: absolute;
         left: 0;
         top: 0;
-        width: 100%;
-        background: white;
-        color: black;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
     }
 
-    /* Export-Buttons auf dem Ausdruck verstecken */
+    /* 5. Attribut-Raster und Flexboxen flexibel machen */
+    #attributeGrid, .stat-grid, .grid-container {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 4px !important;
+        width: 100% !important;
+    }
+
+    .stat-box {
+        flex: 1 1 auto !important;
+        min-width: 50px !important;
+        max-width: 100% !important;
+    }
+
+    /* 6. Textumbrüche erzwingen, falls lange Begriffe auftauchen */
+    .power-block, .power-text, #spiritSkills, #spiritAttacks {
+        word-break: break-word !important;
+        overflow-wrap: break-word !important;
+        width: 100% !important;
+    }
+
+    /* 7. Export-Leiste im Druck verstecken */
     .export-bar {
         display: none !important;
     }
