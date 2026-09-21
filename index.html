@@ -57,8 +57,13 @@
 
         <h3 class="section-title">Schwächen</h3>
         <p id="spiritWeaknesses"></p>
+        <div class="export-bar" style="margin-top: 20px; padding-top: 10px; border-top: 1px solid #ccc;">
+            <button id="btnExportPrint"> als PDF / Drucken</button>
+            <button id="btnExportPng"> als PNG Bild</button>
+            <button id="btnExportHtml"> als HTML-Datei</button>
+        </div>
     </div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Modulbasiertes Hauptskript laden -->
     <script type="module" src="app.js"></script>
 </body>
