@@ -197,6 +197,8 @@ ul {
     justify-content: space-between;
     padding: 3px;
     box-sizing: border-box;
+    cursor: pointer;
+    user-select: none;
 }
 
 .cm-number {
@@ -230,12 +232,6 @@ ul {
     color: #a94442;
 }
 
-/* Live-Anzeige unter dem Monitor */
-.wound-penalty-text {
-    margin-top: 8px;
-    font-size: 0.95em;
-}
-
 @media print {
     /* 1. DIN A4 Ränder festlegen */
     @page {
@@ -260,7 +256,7 @@ ul {
 
     #output, #output * {
         visibility: visible;
-        box-sizing: border-box !important; /* Verhindert Randausdehnung */
+        box-sizing: border-box !important;
     }
 
     /* 4. Sheet exakt auf Seitenbreite einpassen */
@@ -289,7 +285,7 @@ ul {
         max-width: 100% !important;
     }
 
-    /* 6. Textumbrüche erzwingen, falls lange Begriffe auftauchen */
+    /* 6. Textumbrüche erzwingen */
     .power-block, .power-text, #spiritSkills, #spiritAttacks {
         word-break: break-word !important;
         overflow-wrap: break-word !important;
