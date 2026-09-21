@@ -50,12 +50,15 @@ function exportToHtml() {
         .cm-checkbox { width: 18px; height: 18px; cursor: pointer; margin: 2px 0; }
         .cm-badge { font-size: 0.7em; font-weight: bold; color: #d9534f; min-height: 12px; }
         .cm-box.last-box { border-color: #a94442; background-color: #fdf2f2; }
+        .summoning-box { background: #fdfdfd; border: 1px solid #ccc; border-left: 4px solid #d9534f; padding: 10px; margin: 10px 0; border-radius: 4px; }
+        .summoning-grid { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+        .services-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; padding-top: 6px; border-top: 1px solid #eee; }
+        .services-row input { width: 60px; padding: 4px; text-align: center; }
     </style>
 </head>
 <body>
     <div id="output">${outputContent}</div>
     <script>
-        // Kaskadierendes Ankreuzen auch in der exportierten HTML-Datei aufrechterhalten
         document.querySelectorAll('.cm-box').forEach(box => {
             box.addEventListener('click', (e) => {
                 const targetIdx = parseInt(box.dataset.index, 10);
@@ -107,19 +110,14 @@ function renderConditionMonitor(totalBoxes) {
     html += '</div>';
     container.innerHTML = html;
 
-    // Kaskadierendes Ankreuzen: Klick auf Kästchen/Checkbox füllt alle vorherigen mit aus
     container.querySelectorAll('.cm-box').forEach(box => {
         box.addEventListener('click', (e) => {
-            // Verhindert doppeltes Triggern, falls direkt auf die Checkbox geklickt wurde
             if (e.target.tagName === 'INPUT') e.preventDefault();
 
             const targetIndex = parseInt(box.dataset.index, 10);
             const checkboxes = Array.from(container.querySelectorAll('.cm-checkbox'));
 
-            // Prüfen, was aktuell der höchste angehakte Index ist
             const highestChecked = checkboxes.reduce((max, cb, idx) => cb.checked ? idx + 1 : max, 0);
-
-            // Wenn man das höchste bereits angehakte Kästchen erneut anklickt, wird es abgewählt
             const newCheckedCount = (targetIndex === highestChecked) ? targetIndex - 1 : targetIndex;
 
             checkboxes.forEach((cb, idx) => {
@@ -321,6 +319,9 @@ function generateSpirit() {
 
     document.getElementById('spiritName').innerText = `${spirit.name} (Kraftstufe ${spirit.ks})`;
     
+    // Beschwörungs-Widerstandspool eintragen (KS * 2)
+    document.getElementById('spiritSummonPool').innerText = spirit.ks * 2;
+
     document.getElementById('attributeGrid').innerHTML = Object.entries(spirit.attributes)
         .map(([key, val]) => `<div class="stat-box"><span>${key}</span><strong>${val}</strong></div>`)
         .join('');
