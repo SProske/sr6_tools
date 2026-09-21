@@ -30,6 +30,18 @@
     <div id="output" class="card" style="display: none;">
         <h2 id="spiritName" style="color: #ff5252; margin-top: 0;"></h2>
         
+        <!-- Beschwörungs-Hilfe & Dienste-Tracker -->
+        <div class="summoning-box">
+            <div class="summoning-grid">
+                <div><strong>Widerstand des Geistes:</strong> <span id="spiritSummonPool"></span> Würfel (KS × 2)</div>
+                <div><strong>Entzug für Beschwörer:</strong> Erfolge des Geistes</div>
+            </div>
+            <div class="services-row">
+                <label for="spiritServices">Offene / Verbleibende Dienste (Nettoerfolge):</label>
+                <input type="number" id="spiritServices" min="0" value="1" placeholder="0">
+            </div>
+        </div>
+
         <div class="stat-grid" id="attributeGrid"></div>
 
         <h3 class="section-title">Kampf- &amp; Statuswerte</h3>
