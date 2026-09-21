@@ -103,6 +103,48 @@ ul {
     margin: 5px 0;
 }
 
+/* Beschwörungs-Box */
+.summoning-box {
+    background: #222;
+    border: 1px solid #444;
+    border-left: 4px solid #ff5252;
+    padding: 10px 14px;
+    margin: 12px 0 16px 0;
+    border-radius: 4px;
+}
+
+.summoning-grid {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 0.95em;
+}
+
+.services-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #333;
+}
+
+.services-row label {
+    margin-top: 0;
+    white-space: nowrap;
+}
+
+.services-row input {
+    width: 70px;
+    margin-top: 0;
+    text-align: center;
+    font-weight: bold;
+    background: #111;
+    border-color: #ff8a80;
+    color: #ff8a80;
+}
+
 /* Kräftekarten im Sheet */
 .power-block {
     background: #222;
@@ -179,7 +221,7 @@ ul {
 
 .condition-monitor-grid {
     display: grid;
-    grid-template-columns: repeat(3, 70px); /* Exakt 3 Kästchen pro Zeile */
+    grid-template-columns: repeat(3, 70px);
     gap: 8px;
     margin-top: 8px;
 }
@@ -214,7 +256,6 @@ ul {
     margin: 2px 0;
 }
 
-/* Wundmodifikator-Badge im Kästchen */
 .cm-badge {
     font-size: 0.7em;
     font-weight: bold;
@@ -222,7 +263,6 @@ ul {
     min-height: 12px;
 }
 
-/* Hervorhebung für das letzte Kästchen (Vernichtung) */
 .cm-box.last-box {
     border-color: #a94442;
     background-color: #fdf2f2;
@@ -233,13 +273,11 @@ ul {
 }
 
 @media print {
-    /* 1. DIN A4 Ränder festlegen */
     @page {
         size: A4 portrait;
         margin: 10mm;
     }
 
-    /* 2. Hintergrund & Abstände des Body zurücksetzen */
     html, body {
         width: 100% !important;
         height: auto !important;
@@ -249,7 +287,6 @@ ul {
         color: #000 !important;
     }
 
-    /* 3. Alle Nicht-Druck-Elemente ausblenden */
     body * {
         visibility: hidden;
     }
@@ -259,7 +296,6 @@ ul {
         box-sizing: border-box !important;
     }
 
-    /* 4. Sheet exakt auf Seitenbreite einpassen */
     #output {
         position: absolute;
         left: 0;
@@ -271,7 +307,6 @@ ul {
         overflow: visible !important;
     }
 
-    /* 5. Attribut-Raster und Flexboxen flexibel machen */
     #attributeGrid, .stat-grid, .grid-container {
         display: flex !important;
         flex-wrap: wrap !important;
@@ -285,14 +320,12 @@ ul {
         max-width: 100% !important;
     }
 
-    /* 6. Textumbrüche erzwingen */
     .power-block, .power-text, #spiritSkills, #spiritAttacks {
         word-break: break-word !important;
         overflow-wrap: break-word !important;
         width: 100% !important;
     }
 
-    /* 7. Export-Leiste im Druck verstecken */
     .export-bar {
         display: none !important;
     }
@@ -301,7 +334,25 @@ ul {
         border-color: #000 !important;
         background: #fff !important;
     }
+
     .cm-checkbox {
         accent-color: #000;
+    }
+
+    .summoning-box {
+        background: #fff !important;
+        border: 1px solid #000 !important;
+        border-left: 4px solid #000 !important;
+        color: #000 !important;
+    }
+
+    .services-row {
+        border-top-color: #ccc !important;
+    }
+
+    .services-row input {
+        background: #fff !important;
+        border: 1px solid #000 !important;
+        color: #000 !important;
     }
 }
