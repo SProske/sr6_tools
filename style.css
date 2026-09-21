@@ -254,6 +254,7 @@ ul {
     height: 18px;
     cursor: pointer;
     margin: 2px 0;
+    pointer-events: none; /* Klicks direkt an das übergeordnete Kästchen weiterleiten */
 }
 
 .cm-badge {
