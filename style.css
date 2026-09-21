@@ -171,3 +171,29 @@ ul {
     visibility: visible;
     opacity: 1;
 }
+
+@media print {
+    /* Alle Elemente der Seite ausblenden */
+    body * {
+        visibility: hidden;
+    }
+    
+    /* Nur das Output-Sheet und dessen Kinder anzeigen */
+    #output, #output * {
+        visibility: visible;
+    }
+    
+    #output {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: white;
+        color: black;
+    }
+
+    /* Export-Buttons auf dem Ausdruck verstecken */
+    .export-bar {
+        display: none !important;
+    }
+}
